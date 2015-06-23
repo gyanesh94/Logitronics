@@ -1,14 +1,22 @@
 <ion-view>
+    <ion-header-bar class="bar bar-subheader bar-light">
+        <h2 class="title">Customer Name</h2>
+    </ion-header-bar>
     <ion-content>
         <div>
             <br>
             <div>
-                <button class="button button-full button-light">
-                    Good Receipt
-                </button>
-                <button class="button button-full button-light">
-                    Payment Receipt
-                </button>
+                <br>
+
+                <md-autocomplete md-no-cache="true" md-items="item in new_good_receipt_search.customer_search(new_good_receipt_search.search)" md-selected-item="new_good_receipt.customer_name" placeholder="Input Customer Name" md-item-text="item.value" md-search-text="new_good_receipt_search.search" md-min-length="1">
+                    <md-item-template>
+                        <span>{{item.value}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No matches found for "{{new_good_receipt_search.search}}".
+                    </md-not-found>
+                </md-autocomplete>
+
             </div>
         </div>
     </ion-content>

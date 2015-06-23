@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 
-var ionic_app = angular.module('home', ['ionic']);
+var ionic_app = angular.module('home', ['ionic','ngMaterial']);
 
 ionic_app.run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -79,4 +79,20 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         });
+});
+
+
+ionic_app.constant('images_link', {
+    img1: 'incl/img/ionic.png',
+    img2: 'incl/img/ionic.png',
+    img3: 'incl/img/ionic.png',
+    img4: 'incl/img/ionic.png',
+    img5: 'incl/img/ionic.png',
+    img6: 'incl/img/ionic.png',
+    img7: 'incl/img/ionic.png',
+    img8: 'incl/img/ionic.png',
+    img9: 'incl/img/ionic.png',
+    img10: 'incl/img/ionic.png',
+    img11: 'incl/img/ionic.png',
+    img12: 'incl/img/ionic.png'
 });
