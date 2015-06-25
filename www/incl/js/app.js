@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 
 
-var ionic_app = angular.module('home', ['ionic','ngMaterial']);
+var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ion-autocomplete']);
 
-ionic_app.run(function ($ionicPlatform) {
+ionic_app.run(function ($ionicPlatform, $state) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -17,6 +17,7 @@ ionic_app.run(function ($ionicPlatform) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+        $state.go('main.login');
     });
 });
 
@@ -29,7 +30,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             abstract: true,
             views: {
                 'main_view': {
-                    templateUrl: '/comp/main/main.html',
+                    templateUrl: 'comp/main/main.html',
                     controller: 'main_controller'
                 }
             }
@@ -38,7 +39,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/login',
             views: {
                 'content_view': {
-                    templateUrl: '/comp/login/login.html',
+                    templateUrl: 'comp/login/login.html',
                     controller: 'login_controller'
                 }
             }
@@ -47,7 +48,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/select_receipt',
             views: {
                 'content_view': {
-                    templateUrl: '/comp/select_receipt/select_receipt.html',
+                    templateUrl: 'comp/select_receipt/select_receipt.html',
                     controller: 'select_receipt_controller'
                 }
             }
@@ -57,7 +58,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             abstract: true,
             views: {
                 'content_view': {
-                    templateUrl: '/comp/good_receipt/good_receipt.html',
+                    templateUrl: 'comp/good_receipt/good_receipt.html',
                     controller: 'good_receipt_controller'
                 }
             }
@@ -66,33 +67,119 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/customer_name',
             views: {
                 'good_receipt_content_view': {
-                    templateUrl: '/comp/good_receipt/form/customer_name.html'
+                    templateUrl: 'comp/good_receipt/form/customer_name.html'
+                }
+            }
+        })
+        .state('main.good_receipt.item_delievered_name', {
+            url: '/item_delievered_name',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/item_delievered_name.html'
+                }
+            }
+        })
+        .state('main.good_receipt.item_delievered_quantity', {
+            url: '/item_delievered_quantity',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/item_delievered_quantity.html'
+                }
+            }
+        })
+        .state('main.good_receipt.item_received_name', {
+            url: '/item_received_name',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/item_received_name.html'
+                }
+            }
+        })
+        .state('main.good_receipt.item_received_quantity', {
+            url: '/item_received_quantity',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/item_received_quantity.html'
+                }
+            }
+        })
+        .state('main.good_receipt.acknowledgement', {
+            url: '/acknowledgement',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/acknowledgement.html'
                 }
             }
         })
         .state('main.payment_receipt', {
             url: '/payment_receipt',
+            abstract: true,
             views: {
                 'content_view': {
-                    templateUrl: '/comp/payment_receipt/payment_receipt.html',
+                    templateUrl: 'comp/payment_receipt/payment_receipt.html',
                     controller: 'payment_receipt_controller'
+                }
+            }
+        })
+        .state('main.payment_receipt.payment_receipt_information', {
+            url: '/payment_receipt_information',
+            views: {
+                'payment_receipt_content_view': {
+                    templateUrl: 'comp/payment_receipt/form/payment_receipt_information.html'
+                }
+            }
+        })
+        .state('main.payment_receipt.payment_receipt_acknowledgement', {
+            url: '/payment_receipt_acknowledgement',
+            views: {
+                'payment_receipt_content_view': {
+                    templateUrl: 'comp/payment_receipt/form/payment_receipt_acknowledgement.html'
                 }
             }
         });
 });
 
 
-ionic_app.constant('images_link', {
-    img1: 'incl/img/ionic.png',
-    img2: 'incl/img/ionic.png',
-    img3: 'incl/img/ionic.png',
-    img4: 'incl/img/ionic.png',
-    img5: 'incl/img/ionic.png',
-    img6: 'incl/img/ionic.png',
-    img7: 'incl/img/ionic.png',
-    img8: 'incl/img/ionic.png',
-    img9: 'incl/img/ionic.png',
-    img10: 'incl/img/ionic.png',
-    img11: 'incl/img/ionic.png',
-    img12: 'incl/img/ionic.png'
-});
+ionic_app.constant('images_link_empty', [
+    {
+        img_url: 'incl/img/ionic.png',
+        id: '1'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '2'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '3'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '4'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '5'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '6'
+    }
+]);
+
+ionic_app.constant('images_link_filled', [
+    {
+        img_url: 'incl/img/ionic.png',
+        id: '1'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '2'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '3'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '4'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '5'
+    }, {
+        img_url: 'incl/img/ionic.png',
+        id: '6'
+    }
+]);

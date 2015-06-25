@@ -84,3 +84,65 @@ ionic_app.service('getFeedMockAccount', ['$http', '$q', function ($http, $q) {
 
     };
 }]);
+
+
+ionic_app.service('getFeedMockVehicle', ['$http', '$q', function ($http, $q) {
+    this.getFeed = function () {
+        var feed = {
+            "results": [
+                {
+                    "description": "Ledger",
+                    "value": "A K Multimetals Pvt. LTD - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "A L COLD FORGE PVT. LTD. - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "A P ORGANICS PVT. LTD. - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "A R CATERING HOUSE - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "A S CATERING HOUSE - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "A.P. AUTO INDUSTRIES - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AAR AAR INDUSTRY - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AARTI STEEL LTD. AFD II - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AARTI STEEL LTD. ARC  - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AARTI STEEL LTD. ARC - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AARTI STEEL ROLLING MILLS - AL"
+    },
+                {
+                    "description": "Ledger",
+                    "value": "AARTI STRIPS PVT. LTD. - AL"
+    }
+  ]
+        };
+        var promise = $q.defer();
+        promise.resolve(feed['results']);
+        return promise.promise;
+
+    };
+}]);

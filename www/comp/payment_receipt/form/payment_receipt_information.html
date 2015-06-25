@@ -1,0 +1,30 @@
+<ion-view view-title="Payment Receipt">
+   <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">Payment Receipt Information</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            Log Out
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+            <div class="row">
+                <label class="item item-input" style="width:100%;">
+                    <span class="input-label">Quantity</span>
+                    <input type="number" ng-model="new_payment_receipt.quantity">
+                </label>
+            </div>
+            <div class="row">
+                <label class="item item-input" style="width:100%;">
+                    <span class="input-label">Amount Per Item</span>
+                    <input type="number" ng-model="new_payment_receipt.amount_per_item">
+                </label>
+            </div>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="payment_receipt_next()">Next</button>
+    </ion-footer-bar>
+</ion-view>

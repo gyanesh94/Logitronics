@@ -1,0 +1,66 @@
+<ion-view view-title="Good Receipt">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">Acknowledgement</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            Log Out
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+            <div class="list">
+                <div class="item item-divider">
+                    Good Receipt Details
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Customer Name: 
+                    <span ng-bind="new_good_receipt.customer_name.value"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Item Delievered: 
+                    <span ng-bind="new_good_receipt.item_delievered_name"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Item Delievered Quantity: 
+                    <span ng-bind="new_good_receipt.item_delievered_quantity"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Item Received Name: 
+                    <span ng-bind="new_good_receipt.item_received_name"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Item Received Quantity: 
+                    <span ng-bind="new_good_receipt.item_received_quantity"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Vehicle Number: 
+                    <span ng-bind="new_good_receipt.vehicle_number.value"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    Customer Document Id: 
+                    <span ng-bind="new_good_receipt.customer_document_id"></span>
+                    </span>
+                </div>
+            </div>
+            <button class="button button-block button-calm">Take Signature</button>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="confirm_good_receipt()">Confirm</button>
+    </ion-footer-bar>
+</ion-view>
