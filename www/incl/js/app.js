@@ -212,10 +212,39 @@ ionic_app.config(function ($translateProvider) {
         EMPTY: 'Empty',
         FILLED: 'Filled',
         QUANTITY: 'Quantity',
-        PAYMENT_RECEIPT_INFORMATION:'Payment Receipt Information',
-        AMOUNT_PER_ITEM:'Amount Per Item',
-        PAYMENT_RECEIPT_ACKNOWLEDGEMENT:'Payment Receipt Acknowledgement',
-        PAYMENT_RECEIPT_DETAILS:'Payment Receipt Details'
+        PAYMENT_RECEIPT_INFORMATION: 'Payment Receipt Information',
+        AMOUNT_PER_ITEM: 'Amount Per Item',
+        PAYMENT_RECEIPT_ACKNOWLEDGEMENT: 'Payment Receipt Acknowledgement',
+        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details'
+    });
+
+    $translateProvider.translations('hi', {
+        LOGIN: 'लॉग इन',
+        USERNAME: 'यूजर का नाम',
+        PASSWORD: 'पासवर्ड',
+        SELECT_RECEIPT: 'चयन करें रसीद',
+        LOG_OUT: 'Log Out',
+        GOOD_RECEIPT: 'Good Receipt',
+        PAYMENT_RECEIPT: 'Payment Receipt',
+        ACKNOWLEDGEMENT: 'Acknowledgement',
+        GOOD_RECEIPT_DETAILS: 'Good Receipt Details',
+        CUSTOMER_NAME: 'Customer Name',
+        ITEM_DELIEVERED_NAME: 'Item Delievered Name',
+        ITEM_DELIEVERED_QUANTITY: 'Item Delievered Quantity',
+        ITEM_RECEIVED_NAME: 'Item Received Name',
+        ITEM_RECEIVED_QUANTITY: 'Item Received Quantity',
+        VEHICLE_NUMBER: 'Vehicle Number',
+        CUSTOMER_DOCUMENT_ID: 'Customer Document Id',
+        TAKE_SIGNATURE: 'Take Signature',
+        CONFIRM: 'Confirm',
+        NEXT: 'Next',
+        EMPTY: 'Empty',
+        FILLED: 'Filled',
+        QUANTITY: 'Quantity',
+        PAYMENT_RECEIPT_INFORMATION: 'Payment Receipt Information',
+        AMOUNT_PER_ITEM: 'Amount Per Item',
+        PAYMENT_RECEIPT_ACKNOWLEDGEMENT: 'Payment Receipt Acknowledgement',
+        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details'
     });
 
     $translateProvider.preferredLanguage('en');

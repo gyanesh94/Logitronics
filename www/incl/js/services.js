@@ -1,3 +1,12 @@
+// Switch Preffered Language
+
+ionic_app.service('switch_preffered_language', ['$translate', function($translate){
+    this.translate_language = function (preferred_language) {
+        $translate.use(preferred_language);
+    };
+}]);
+
+
 // Get Customer Accounts from API
 
 ionic_app.service('getCustomerLive', ['$http', '$q', function ($http, $q) {
