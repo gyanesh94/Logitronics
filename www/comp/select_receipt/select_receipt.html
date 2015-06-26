@@ -1,7 +1,7 @@
-<ion-view view-title="Select Receipt" hide-back-button="true">
+<ion-view view-title="{{'SELECT_RECEIPT' | translate}}" hide-back-button="true">
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -9,10 +9,10 @@
             <br>
             <div>
                 <button class="button button-full button-light" on-tap="good_receipt_form()">
-                    Good Receipt
+                    {{'GOOD_RECEIPT' | translate}}
                 </button>
                 <button class="button button-full button-light" on-tap="payment_receipt_form()">
-                    Payment Receipt
+                    {{'PAYMENT_RECEIPT' | translate}}
                 </button>
             </div>
         </div>

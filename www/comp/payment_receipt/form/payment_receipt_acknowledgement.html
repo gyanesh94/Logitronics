@@ -1,10 +1,10 @@
-<ion-view view-title="Payment Receipt">
+<ion-view view-title="{{'PAYMENT_RECEIPT' | translate}}">
     <ion-header-bar class="bar bar-subheader bar-stable">
-        <h2 class="title">Payment Receipt Acknowledgement</h2>
+        <h2 class="title">{{'PAYMENT_RECEIPT_ACKNOWLEDGEMENT' | translate}}</h2>
     </ion-header-bar>
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -12,22 +12,22 @@
             <br>
             <div class="list">
                 <div class="item item-divider">
-                    Payment Receipt Details
+                    {{'PAYMENT_RECEIPT_DETAILS' | translate}}
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Quantity: 
+                    {{'QUANTITY' | translate}}: 
                     <span ng-bind="new_payment_receipt.quantity"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Amount Per Item: 
+                    {{'AMOUNT_PER_ITEM' | translate}}: 
                     <span ng-bind="new_payment_receipt.amount_per_item"></span>
                     </span>
                 </div>
             </div>
-            <button class="button button-block button-calm" on-tap="payment_receipt_acknowledgement()">Confirm</button>
+            <button class="button button-block button-calm" on-tap="payment_receipt_acknowledgement()">{{'CONFIRM' | translate}}</button>
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">

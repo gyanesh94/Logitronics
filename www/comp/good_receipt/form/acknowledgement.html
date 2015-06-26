@@ -1,10 +1,10 @@
-<ion-view view-title="Good Receipt">
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
     <ion-header-bar class="bar bar-subheader bar-stable">
-        <h2 class="title">Acknowledgement</h2>
+        <h2 class="title">{{'ACKNOWLEDGEMENT' | translate}}</h2>
     </ion-header-bar>
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -12,55 +12,55 @@
             <br>
             <div class="list">
                 <div class="item item-divider">
-                    Good Receipt Details
+                    {{'GOOD_RECEIPT_DETAILS' | translate}}
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Customer Name: 
+                   {{'CUSTOMER_NAME' | translate}}: 
                     <span ng-bind="new_good_receipt.customer_name.value"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Item Delievered: 
+                   {{'ITEM_DELIEVERED_NAME' | translate}}: 
                     <span ng-bind="new_good_receipt.item_delievered_name"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Item Delievered Quantity: 
+                    {{'ITEM_DELIEVERED_QUANTITY' | translate}}: 
                     <span ng-bind="new_good_receipt.item_delievered_quantity"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Item Received Name: 
+                   {{'ITEM_RECEIVED_NAME' | translate}}: 
                     <span ng-bind="new_good_receipt.item_received_name"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Item Received Quantity: 
+                    {{'ITEM_RECEIVED_QUANTITY' | translate}}: 
                     <span ng-bind="new_good_receipt.item_received_quantity"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Vehicle Number: 
+                    {{'VEHICLE_NUMBER' | translate}}: 
                     <span ng-bind="new_good_receipt.vehicle_number.value"></span>
                     </span>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">
-                    Customer Document Id: 
+                   {{'CUSTOMER_DOCUMENT_ID' | translate}}: 
                     <span ng-bind="new_good_receipt.customer_document_id"></span>
                     </span>
                 </div>
             </div>
-            <button class="button button-block button-calm">Take Signature</button>
+            <button class="button button-block button-calm">{{'TAKE_SIGNATURE' | translate}}</button>
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="confirm_good_receipt()">Confirm</button>
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="confirm_good_receipt()">{{'CONFIRM' | translate}}</button>
     </ion-footer-bar>
 </ion-view>

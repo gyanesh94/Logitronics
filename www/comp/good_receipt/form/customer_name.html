@@ -1,10 +1,10 @@
-<ion-view view-title="Good Receipt">
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
     <ion-header-bar class="bar bar-subheader bar-stable">
-        <h2 class="title">Customer Name</h2>
+        <h2 class="title">{{'CUSTOMER_NAME' | translate}}</h2>
     </ion-header-bar>
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -14,7 +14,7 @@
                 <!--  Customer Name  -->
                 <div class="card">
                     <div class="item item-divider">
-                        <span>Customer Name</span>
+                        <span>{{'CUSTOMER_NAME' | translate}}</span>
                     </div>
                     <label class="item item-input" style="width:100%;">
                         <ion-autocomplete ng-model="new_good_receipt.customer_name" item-view-value-key="value" items-method="new_good_receipt_search.customer_search(query)" placeholder="Customer Name" />
@@ -24,7 +24,7 @@
                 <!--  Vehicle Number  -->
                 <div class="card">
                     <div class="item item-divider">
-                        <span>Vehicle Number</span>
+                        <span>{{'VEHICLE_NUMBER' | translate}}</span>
                     </div>
                     <label class="item item-input" style="width:100%;">
                         <ion-autocomplete ng-model="new_good_receipt.vehicle_number" item-view-value-key="value" items-method="new_good_receipt_search.vehicle_search(query)" placeholder="Vehicle Number" />
@@ -34,7 +34,7 @@
                 <!-- Customer Document Id -->
                 <div class="card">
                     <div class="item item-divider">
-                        <span>Customer Document Id</span>
+                        <span>{{'CUSTOMER_DOCUMENT_ID' | translate}}</span>
                     </div>
                     <label class="item item-input">
                         <input type="text" ng-model="new_good_receipt.customer_document_id" placeholder="Customer Document Id">
@@ -45,6 +45,6 @@
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="button pull-right" style="padding: 0px 30px;font-color:#000" on-tap="customer_name_next()">Next</button>
+        <button class="button pull-right" style="padding: 0px 30px;font-color:#000" on-tap="customer_name_next()">{{'NEXT' | translate}}</button>
     </ion-footer-bar>
 </ion-view>

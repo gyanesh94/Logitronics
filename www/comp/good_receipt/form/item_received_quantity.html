@@ -1,10 +1,10 @@
-<ion-view view-title="Good Receipt">
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
     <ion-header-bar class="bar bar-subheader bar-stable">
-        <h2 class="title">Item Received Quatity</h2>
+        <h2 class="title">{{'ITEM_RECEIVED_QUANTITY' | translate}}</h2>
     </ion-header-bar>
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -12,13 +12,13 @@
             <br>
             <div class="row">
                 <label class="item item-input" style="width:100%;">
-                    <span class="input-label">Quantity</span>
+                    <span class="input-label">{{'QUANTITY' | translate}}</span>
                     <input type="number" ng-model="new_good_receipt.item_received_quantity">
                 </label>
             </div>
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="item_received_quantity_next()">Next</button>
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="item_received_quantity_next()">{{'NEXT' | translate}}</button>
     </ion-footer-bar>
 </ion-view>

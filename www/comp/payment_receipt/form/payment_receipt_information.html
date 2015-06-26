@@ -1,10 +1,10 @@
-<ion-view view-title="Payment Receipt">
+<ion-view view-title="{{'PAYMENT_RECEIPT' | translate}}">
    <ion-header-bar class="bar bar-subheader bar-stable">
-        <h2 class="title">Payment Receipt Information</h2>
+        <h2 class="title">{{'PAYMENT_RECEIPT_INFORMATION' | translate}}</h2>
     </ion-header-bar>
     <ion-nav-buttons side="right">
         <button class="button" on-tap="log_out()">
-            Log Out
+            {{'LOG_OUT' | translate}}
         </button>
     </ion-nav-buttons>
     <ion-content>
@@ -12,19 +12,19 @@
             <br>
             <div class="row">
                 <label class="item item-input" style="width:100%;">
-                    <span class="input-label">Quantity</span>
+                    <span class="input-label">{{'QUANTITY' | translate}}</span>
                     <input type="number" ng-model="new_payment_receipt.quantity">
                 </label>
             </div>
             <div class="row">
                 <label class="item item-input" style="width:100%;">
-                    <span class="input-label">Amount Per Item</span>
+                    <span class="input-label">{{'AMOUNT_PER_ITEM' | translate}}</span>
                     <input type="number" ng-model="new_payment_receipt.amount_per_item">
                 </label>
             </div>
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="payment_receipt_next()">Next</button>
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="payment_receipt_next()">{{'NEXT' | translate}}</button>
     </ion-footer-bar>
 </ion-view>
