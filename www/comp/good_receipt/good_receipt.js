@@ -55,7 +55,29 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, getFee
         $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
+    $scope.take_signature = function () {
+        $state.transitionTo('main.good_receipt.take_signature');
+    };
+
     $scope.confirm_good_receipt = function () {
         $state.transitionTo('main.select_receipt');
     };
+});
+
+
+
+// Signature Pad Controller
+
+ionic_app.controller('take_signature_controller', function ($scope) {
+    var canvas = document.getElementById('signatureCanvas');
+    var signaturePad = new SignaturePad(canvas);
+
+    $scope.clearCanvas = function () {
+        signaturePad.clear();
+    }
+
+    $scope.saveCanvas = function () {
+        var sigImg = signaturePad.toDataURL();
+        $scope.signature = sigImg;
+    }
 });

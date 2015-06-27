@@ -111,6 +111,15 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('main.good_receipt.take_signature', {
+            url: '/take_signature',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/take_signature.html',
+                    controller: 'take_signature_controller'
+                }
+            }
+        })
         .state('main.payment_receipt', {
             url: '/payment_receipt',
             abstract: true,
@@ -215,7 +224,10 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT_INFORMATION: 'Payment Receipt Information',
         AMOUNT_PER_ITEM: 'Amount Per Item',
         PAYMENT_RECEIPT_ACKNOWLEDGEMENT: 'Payment Receipt Acknowledgement',
-        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details'
+        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details',
+        SIGNATURE: 'Signature',
+        SAVE: 'Save',
+        CLEAR: 'Clear'
     });
 
     $translateProvider.translations('hi', {
@@ -244,7 +256,10 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT_INFORMATION: 'Payment Receipt Information',
         AMOUNT_PER_ITEM: 'Amount Per Item',
         PAYMENT_RECEIPT_ACKNOWLEDGEMENT: 'Payment Receipt Acknowledgement',
-        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details'
+        PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details',
+        SIGNATURE: 'Signature',
+        SAVE: 'Save',
+        CLEAR: 'Clear'
     });
 
     $translateProvider.preferredLanguage('en');
