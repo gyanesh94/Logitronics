@@ -17,7 +17,7 @@
                         <span>{{'CUSTOMER_NAME' | translate}}</span>
                     </div>
                     <label class="item item-input" style="width:100%;">
-                        <ion-autocomplete ng-model="new_good_receipt.customer_name" item-view-value-key="value" items-method="new_good_receipt_search.customer_search(query)" placeholder="Customer Name" />
+                        <ion-autocomplete ng-model="new_good_receipt.customer_name" item-view-value-key="value" items-method="new_good_receipt_search.customer_search(query)" placeholder="{{'CUSTOMER_NAME' | translate}}" />
                     </label>
                 </div>
 
@@ -27,7 +27,7 @@
                         <span>{{'VEHICLE_NUMBER' | translate}}</span>
                     </div>
                     <label class="item item-input" style="width:100%;">
-                        <ion-autocomplete ng-model="new_good_receipt.vehicle_number" item-view-value-key="value" items-method="new_good_receipt_search.vehicle_search(query)" placeholder="Vehicle Number" />
+                        <ion-autocomplete ng-model="new_good_receipt.vehicle_number" item-view-value-key="value" items-method="new_good_receipt_search.vehicle_search(query)" placeholder="{{'VEHICLE_NUMBER' | translate}}" />
                     </label>
                 </div>
 
@@ -37,7 +37,7 @@
                         <span>{{'CUSTOMER_DOCUMENT_ID' | translate}}</span>
                     </div>
                     <label class="item item-input">
-                        <input type="text" ng-model="new_good_receipt.customer_document_id" placeholder="Customer Document Id">
+                        <input type="text" ng-model="new_good_receipt.customer_document_id" placeholder="{{'CUSTOMER_DOCUMENT_ID' | translate}}">
                     </label>
                 </div>
 

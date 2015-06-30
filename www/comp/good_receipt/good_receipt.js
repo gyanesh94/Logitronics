@@ -1,4 +1,5 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $state, getFeedMockAccount, images_link_empty, images_link_filled, getFeedMockVehicle) {
+ionic_app.controller('good_receipt_controller', function ($scope, $state, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt) {
+    var me = this;
 
     $scope.new_good_receipt = {
         customer_name: {},
@@ -14,13 +15,49 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, getFee
 
     $scope.new_good_receipt_search = {
         vehicle_search: function (query) {
-            return getFeedMockVehicle.getFeed();
+            filters = {};
+            fields = ['name', 'description'];
+            return get_vehicle_live.live_feed(query, filters, fields);
         },
         customer_search: function (query) {
-            return getFeedMockAccount.getFeed();
+            filters = {};
+            fields = ['name', 'description'];
+            return get_customer_live.live_feed(query, filters, fields);
         },
         item_images_empty: images_link_empty,
-        item_images_filled: images_link_filled
+        item_images_filled: images_link_filled,
+        confirm_disable: false
+    };
+
+
+    // Create Good Receipt
+    me.create_good_receipt = function () {
+        $scope.new_good_receipt_search.confirm_disable = true;
+        now_date = moment().format("YYYY-MM-DD");
+        now_time = moment().format("HH:mm:ss");
+        data = {
+            docstatus: 1,
+            customer: $scope.new_good_receipt.customer_name.value,
+            item_delivered: $scope.new_good_receipt.item_delievered_name,
+            delivered_quantity: $scope.new_good_receipt.item_delievered_quantity,
+            item_received: $scope.new_good_receipt.item_received_name,
+            received_quantity: $scope.new_good_receipt.item_received_quantity,
+            transaction_date: now_date,
+            posting_date: now_date,
+            posting_time: now_time,
+            vehicle: $scope.new_good_receipt.vehicle_number.value,
+            goods_receipt_number: $scope.new_good_receipt.customer_document_id
+        }
+        create_new_good_receipt.create_feed(data)
+            .success(function (data) {
+                $scope.new_good_receipt_search.confirm_disable = false;
+                $state.transitionTo('main.select_receipt');
+            })
+            .error(function (data) {
+                message = JSON.parse(data._server_messages);
+                $scope.new_good_receipt_search.confirm_disable = false;
+                $cordovaToast.show(message[0], 'short', 'bottom');
+            });
     };
 
     $scope.customer_name_next = function () {
@@ -60,7 +97,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, getFee
     };
 
     $scope.confirm_good_receipt = function () {
-        $state.transitionTo('main.select_receipt');
+        me.create_good_receipt();
     };
 });
 

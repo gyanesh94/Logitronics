@@ -1,13 +1,30 @@
-ionic_app.controller('login_controller', function($scope, $state, switch_preffered_language){
-    $scope.login_validation = function(){
-        $state.transitionTo('main.select_receipt');
+ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, switch_preffered_language, login_authentication) {
+
+    $scope.login = {
+        username: '',
+        password: '',
+        disable: false,
+        full_name: ''
     };
-    
-    $scope.switch_to_english = function(){
+    $scope.login_validation = function () {
+        $scope.login.disable = true;
+        login_authentication.login_authenticate($scope.login.username, $scope.login.password)
+            .success(function (data) {
+                $scope.login.full_name = data.full_name;
+                $scope.login.disable = false;
+                $state.transitionTo('main.select_receipt');
+            })
+            .error(function (data) {
+                $scope.login.disable = false;
+                $cordovaToast.show(data.message, 'short', 'bottom');
+            });
+    };
+
+    $scope.switch_to_english = function () {
         switch_preffered_language.translate_language('en');
     };
-    
-    $scope.switch_to_hindi = function(){
+
+    $scope.switch_to_hindi = function () {
         switch_preffered_language.translate_language('hi');
     };
 });

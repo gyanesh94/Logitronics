@@ -13,7 +13,7 @@
             <div class="row">
                 <label class="item item-input" style="width:100%;">
                     <span class="input-label">{{'QUANTITY' | translate}}</span>
-                    <input type="number" ng-model="new_good_receipt.item_received_quantity">
+                    <input type="number" min="0" ng-model="new_good_receipt.item_received_quantity">
                 </label>
             </div>
         </div>

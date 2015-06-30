@@ -4,24 +4,28 @@
             <div class="list card">
                 <label class="item item-input">
                     <span class="input-label">{{'USERNAME' | translate }}</span>
-                    <input type="text">
+                    <input type="text" ng-model='login.username'>
                 </label>
                 <label class="item item-input">
-                    <span class="input-label">{{'PASSWORD' | translate }}</span>
-                    <input type="password">
+                    <span class="input-label">{{ 'PASSWORD' | translate }}</span>
+                    <input type="password" ng-model='login.password'>
                 </label>
             </div>
             <div align='center'>
-                <button class="button button-large button-positive" on-tap="login_validation()">
-                    {{'LOGIN' | translate }}
+                <button class="button button-large button-positive" style="min-width:150px;" ng-disabled="login.disable" on-tap="login_validation()">
+                    {{ 'LOGIN' | translate }}
                 </button>
             </div>
-        <br>
-        <div align='center'>
-                <button class="button button-small button-stable" on-tap="switch_to_english()">
+            <br>
+            <br>
+            <br>
+            <div align='center'>
+                <button class="button button-large button-stable" style="min-width:120px;" on-tap="switch_to_english()">
                     English
                 </button>
-                <button class="button button-small button-stable" on-tap="switch_to_hindi()">
+                <br>
+                <br>
+                <button class="button button-large button-stable" style="min-width:120px;" on-tap="switch_to_hindi()">
                     Hindi
                 </button>
             </div>

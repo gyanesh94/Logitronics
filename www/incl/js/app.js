@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 
-var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ion-autocomplete', 'pascalprecht.translate']);
+var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ion-autocomplete', 'pascalprecht.translate', 'ngCordova']);
 
 ionic_app.run(function ($ionicPlatform, $state) {
     $ionicPlatform.ready(function () {
@@ -152,44 +152,40 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
 ionic_app.constant('images_link_empty', [
     {
         img_url: 'incl/img/ionic.png',
-        id: '1'
+        id: 'EC19',
+        name: 'EC19'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '2'
+        id: 'EC35',
+        name: 'EC35'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '3'
+        id: 'EC47.5',
+        name: 'EC47.5'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '4'
-    }, {
-        img_url: 'incl/img/ionic.png',
-        id: '5'
-    }, {
-        img_url: 'incl/img/ionic.png',
-        id: '6'
+        id: 'EC47.5L',
+        name: 'EC47.5LOT'
     }
 ]);
 
 ionic_app.constant('images_link_filled', [
     {
         img_url: 'incl/img/ionic.png',
-        id: '1'
+        id: 'FC19',
+        name: 'FC19'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '2'
+        id: 'FC35',
+        name: 'FC35'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '3'
+        id: 'FC47.5',
+        name: 'FC47.5'
     }, {
         img_url: 'incl/img/ionic.png',
-        id: '4'
-    }, {
-        img_url: 'incl/img/ionic.png',
-        id: '5'
-    }, {
-        img_url: 'incl/img/ionic.png',
-        id: '6'
+        id: 'FC47.5L',
+        name: 'FC47.5LOT'
     }
 ]);
 
@@ -227,7 +223,14 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details',
         SIGNATURE: 'Signature',
         SAVE: 'Save',
-        CLEAR: 'Clear'
+        CLEAR: 'Clear',
+        STOCK_OWNER: 'Stock Owner',
+        VOUCHER_ID: 'Voucher ID',
+        TRANSACTION_TYPE: 'Transaction Type',
+        TV_OUT: 'TV Out',
+        REFILL: 'Refill',
+        NEW_CONNECTION: 'New Connection',
+        ITEM:'Item'
     });
 
     $translateProvider.translations('hi', {
@@ -259,8 +262,16 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT_DETAILS: 'Payment Receipt Details',
         SIGNATURE: 'Signature',
         SAVE: 'Save',
-        CLEAR: 'Clear'
+        CLEAR: 'Clear',
+        STOCK_OWNER: 'Stock Owner',
+        VOUCHER_ID: 'Voucher ID',
+        TRANSACTION_TYPE: 'Transaction Type',
+        TV_OUT: 'TV Out',
+        REFILL: 'Refill',
+        NEW_CONNECTION: 'New Connection',
+        ITEM:'Item'
     });
 
     $translateProvider.preferredLanguage('en');
+    $translateProvider.useSanitizeValueStrategy(null);
 });

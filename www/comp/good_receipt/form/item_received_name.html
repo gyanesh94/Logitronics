@@ -18,7 +18,7 @@
                     <ion-list>
                         <ion-item ng-repeat="img in new_good_receipt_search.item_images_empty" on-tap="item_received_name_empty_next($index)">
                             <img ng-src="{{img.img_url}}" alt="{{img.id}}">
-                            <h3 ng-bind="{{img.id}}"></h3>
+                            <h3 ng-bind="img.name"></h3>
                         </ion-item>
                     </ion-list>
                 </div>
@@ -29,7 +29,7 @@
                     <ion-list>
                         <ion-item ng-repeat="img in new_good_receipt_search.item_images_filled" on-tap="item_received_name_filled_next($index)">
                             <img ng-src="{{img.img_url}}" alt="{{img.id}}">
-                            <h3 ng-bind="{{img.id}}"></h3>
+                            <h3 ng-bind="img.name"></h3>
                         </ion-item>
                     </ion-list>
                 </div>

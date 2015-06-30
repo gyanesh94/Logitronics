@@ -57,7 +57,7 @@
                     </span>
                 </div>
             </div>
-            <button class="button button-block button-calm" on-tap="take_signature()">{{'TAKE_SIGNATURE' | translate}}</button>
+            <button class="button button-block button-calm" ng-disabled="new_good_receipt_search.confirm_disable" on-tap="take_signature()">{{'TAKE_SIGNATURE' | translate}}</button>
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
