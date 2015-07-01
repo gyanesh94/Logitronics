@@ -51,6 +51,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
             .success(function (data) {
                 $scope.new_payment_receipt_search.confirm_disable = false;
                 delete $scope.new_payment_receipt;
+                $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {

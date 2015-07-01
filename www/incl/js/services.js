@@ -2,6 +2,39 @@ var server_base_url = "/api";
 //var server_base_url = "https://erp.arungas.com";
 
 
+// http error interceptor
+ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast',
+    function ($q, $location, $cordovaToast) {
+        return {
+            responseError: function (rejection) {
+                var stat = rejection.status;
+                var msg = '';
+                if (stat == 403)
+                    msg = 'Login Required';
+                else if (stat == 500)
+                    msg = 'Internal Server Error';
+                else if (stat == 501)
+                    msg = 'Server Error';
+                else if (stat == 502)
+                    msg = 'Server is Offline';
+                else if (stat == 503)
+                    msg = 'Server is Overload or down';
+                else if (stat == 504)
+                    msg = 'Server is Offline';
+                if (msg != '')
+                    $cordovaToast.show(msg, 'short', 'bottom');
+                return $q.reject(rejection);
+            }
+        }
+}]);
+
+
+//Http Intercpetor to check auth failures for xhr requests
+ionic_app.config(['$httpProvider',
+    function ($httpProvider) {
+        $httpProvider.interceptors.push('myHttpResponseInterceptor');
+}]);
+
 
 
 // Switch Preffered Language
@@ -116,6 +149,25 @@ ionic_app.service('create_new_good_receipt', ['$http', function ($http) {
         return $http.post(server_base_url + '/api/resource/Goods Receipt', $.param(snd));
     };
 }]);
+
+
+// Send Image
+ionic_app.service('send_image', ['$http', function ($http) {
+    this.send = function (voucher_id, data, filename, doctype) {
+        var snd = {
+            from_form: '1',
+            doctype: doctype,
+            docname: voucher_id,
+            filename: filename,
+            filedata: data,
+            cmd: 'uploadfile',
+            _type: 'POST'
+
+        };
+        return $http.post(server_base_url, $.param(snd));
+    };
+}]);
+
 
 ionic_app.service('getFeedMockAccount', ['$http', '$q', function ($http, $q) {
     this.getFeed = function () {

@@ -17,6 +17,7 @@ ionic_app.run(function ($ionicPlatform, $state) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+//        $state.go('main.good_receipt.acknowledgement');
         $state.go('main.login');
     });
 });
@@ -120,6 +121,14 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('main.good_receipt.take_picture_location', {
+            url: '/take_signature',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/take_picture_location.html'
+                }
+            }
+        })
         .state('main.payment_receipt', {
             url: '/payment_receipt',
             abstract: true,
@@ -194,7 +203,7 @@ ionic_app.constant('images_link_filled', [
 ionic_app.value('canvas_signature', {
         back_image: '',
         signature: '',
-        signature_pad:''
+        signature_pad: ''
     }
 
 );
@@ -238,7 +247,8 @@ ionic_app.config(function ($translateProvider) {
         TV_OUT: 'TV Out',
         REFILL: 'Refill',
         NEW_CONNECTION: 'New Connection',
-        ITEM: 'Item'
+        ITEM: 'Item',
+        TAKE_NEW_IMAGE: 'Take New Image'
     });
 
     $translateProvider.translations('hi', {
@@ -277,7 +287,8 @@ ionic_app.config(function ($translateProvider) {
         TV_OUT: 'TV Out',
         REFILL: 'Refill',
         NEW_CONNECTION: 'New Connection',
-        ITEM: 'Item'
+        ITEM: 'Item',
+        TAKE_NEW_IMAGE: 'Take New Image'
     });
 
     $translateProvider.preferredLanguage('en');

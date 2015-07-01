@@ -11,12 +11,14 @@
   <allow-navigation href="*"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
+  <preference name="AndroidPersistentFileLocation" value="Internal"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,root"/>
   <platform name="android">
     <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
     <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>

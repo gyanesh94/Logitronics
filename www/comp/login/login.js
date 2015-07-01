@@ -14,6 +14,7 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                 $scope.login.full_name = data.full_name;
                 $scope.login.disable = false;
                 delete $scope.login;
+                $scope.login = angular.copy($scope.login_object);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
