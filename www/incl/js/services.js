@@ -1,4 +1,7 @@
 var server_base_url = "/api";
+//var server_base_url = "https://erp.arungas.com";
+
+
 
 
 // Switch Preffered Language

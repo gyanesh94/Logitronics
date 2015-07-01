@@ -1,7 +1,7 @@
 ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, get_stock_owner, create_new_payment_receipt) {
     var me = this;
 
-    $scope.new_payment_receipt = {
+    $scope.new_payment_receipt_object = {
         quantity: '',
         amount_per_item: '',
         stock_owner: {},
@@ -9,6 +9,8 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
         transaction_type: 'Refill',
         item: 'FC19'
     };
+
+    $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
 
     $scope.new_payment_receipt_search = {
         stock_owner_search: function (query) {
@@ -44,10 +46,11 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
             posting_time: now_time,
             fiscal_year: "2015-16",
             item: $scope.new_payment_receipt.item
-        }
+        };
         create_new_payment_receipt.create_feed(data)
             .success(function (data) {
                 $scope.new_payment_receipt_search.confirm_disable = false;
+                delete $scope.new_payment_receipt;
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {

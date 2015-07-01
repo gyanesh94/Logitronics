@@ -1,7 +1,7 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $state, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt) {
+ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordovaToast, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature) {
     var me = this;
 
-    $scope.new_good_receipt = {
+    $scope.new_good_receipt_object = {
         customer_name: {},
         item_delievered_name: '',
         item_delievered_quantity: '',
@@ -10,8 +10,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, get_cu
         done: false,
         time_stamp: '',
         vehicle_number: '',
-        customer_document_id: ''
+        customer_document_id: '',
+        voucher_id: '',
+        signature_data: ''
     };
+
+    $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
 
     $scope.new_good_receipt_search = {
         vehicle_search: function (query) {
@@ -46,11 +50,13 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, get_cu
             posting_date: now_date,
             posting_time: now_time,
             vehicle: $scope.new_good_receipt.vehicle_number.value,
-            goods_receipt_number: $scope.new_good_receipt.customer_document_id
-        }
+            goods_receipt_number: $scope.new_good_receipt.voucher_id,
+            signature_data: canvas_signature.signature
+        };
         create_new_good_receipt.create_feed(data)
             .success(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
+                delete $scope.new_good_receipt;
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
@@ -92,11 +98,20 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, get_cu
         $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
-    $scope.take_signature = function () {
-        $state.transitionTo('main.good_receipt.take_signature');
+    $scope.take_signature_button = function () {
+        html2canvas(document.getElementById('asd_asd'), {
+            onrendered: function (canvas) {
+                canvas_signature.back_image = canvas.toDataURL({
+                    format: 'png',
+                    quality: 0.7
+                });
+                $state.transitionTo('main.good_receipt.take_signature');
+            }
+        });
     };
 
     $scope.confirm_good_receipt = function () {
+        canvas_signature.signature = canvas_signature.signature_pad.toDataURL();
         me.create_good_receipt();
     };
 });
@@ -105,16 +120,23 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, get_cu
 
 // Signature Pad Controller
 
-ionic_app.controller('take_signature_controller', function ($scope) {
-    var canvas = document.getElementById('signatureCanvas');
-    var signaturePad = new SignaturePad(canvas);
+ionic_app.controller('take_signature_controller', function ($scope, canvas_signature) {
 
-    $scope.clearCanvas = function () {
-        signaturePad.clear();
-    }
+    var canvas = document.getElementById('signatureCanvas'),
+        ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - 170;
+    var background = new Image();
+    background.src = canvas_signature.back_image;
 
-    $scope.saveCanvas = function () {
-        var sigImg = signaturePad.toDataURL();
-        $scope.signature = sigImg;
-    }
+    background.onload = function () {
+        ctx.drawImage(background, 0, 0, background.width, background.height, 0, 0, canvas.width, canvas.height);
+    };
+
+    canvas_signature.signature_pad = new SignaturePad(canvas);
+
+    $scope.clear_canvas = function () {
+        canvas_signature.signature_pad.clear();
+        background.src = canvas_signature.back_image;
+    };
 });

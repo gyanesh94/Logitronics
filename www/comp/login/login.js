@@ -1,17 +1,19 @@
 ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, switch_preffered_language, login_authentication) {
 
-    $scope.login = {
+    $scope.login_object = {
         username: '',
         password: '',
         disable: false,
         full_name: ''
     };
+    $scope.login = angular.copy($scope.login_object);
     $scope.login_validation = function () {
         $scope.login.disable = true;
         login_authentication.login_authenticate($scope.login.username, $scope.login.password)
             .success(function (data) {
                 $scope.login.full_name = data.full_name;
                 $scope.login.disable = false;
+                delete $scope.login;
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {

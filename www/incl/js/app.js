@@ -190,9 +190,17 @@ ionic_app.constant('images_link_filled', [
 ]);
 
 
+// Signature
+ionic_app.value('canvas_signature', {
+        back_image: '',
+        signature: '',
+        signature_pad:''
+    }
+
+);
+
 
 // Angular Translate
-
 ionic_app.config(function ($translateProvider) {
     $translateProvider.translations('en', {
         LOGIN: 'Login',
@@ -230,7 +238,7 @@ ionic_app.config(function ($translateProvider) {
         TV_OUT: 'TV Out',
         REFILL: 'Refill',
         NEW_CONNECTION: 'New Connection',
-        ITEM:'Item'
+        ITEM: 'Item'
     });
 
     $translateProvider.translations('hi', {
@@ -269,7 +277,7 @@ ionic_app.config(function ($translateProvider) {
         TV_OUT: 'TV Out',
         REFILL: 'Refill',
         NEW_CONNECTION: 'New Connection',
-        ITEM:'Item'
+        ITEM: 'Item'
     });
 
     $translateProvider.preferredLanguage('en');
