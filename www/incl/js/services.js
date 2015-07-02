@@ -1,7 +1,3 @@
-var server_base_url = "/api";
-//var server_base_url = "https://erp.arungas.com";
-
-
 // http error interceptor
 ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast',
     function ($q, $location, $cordovaToast) {
@@ -54,20 +50,20 @@ ionic_app.config(function ($httpProvider) {
 
 
 // Login Authentication
-ionic_app.service('login_authentication', ['$http', function ($http) {
+ionic_app.service('login_authentication', ['$http', 'app_settings', function ($http, app_settings) {
     this.login_authenticate = function (usr, pwd) {
         var data = {
             usr: usr,
             pwd: pwd
         };
-        var url = server_base_url + '/api/method/login?' + $.param(data);
+        var url = app_settings.server_base_url + '/api/method/login?' + $.param(data);
         return $http.post(url);
     };
 }]);
 
 
 // Get Customer Accounts from API
-ionic_app.service('get_customer_live', ['$http', '$q', function ($http, $q) {
+ionic_app.service('get_customer_live', ['$http', '$q', 'app_settings', function ($http, $q, app_settings) {
     this.live_feed = function (query, filters, fields) {
         var snd = {
             txt: query,
@@ -78,7 +74,7 @@ ionic_app.service('get_customer_live', ['$http', '$q', function ($http, $q) {
             _type: 'POST'
         };
         var promise = $q.defer();
-        $http.get(server_base_url + '?' + $.param(snd))
+        $http.get(app_settings.server_base_url + '?' + $.param(snd))
             .success(function (data) {
                 promise.resolve(data.results);
             });
@@ -88,7 +84,7 @@ ionic_app.service('get_customer_live', ['$http', '$q', function ($http, $q) {
 
 
 // Get Vehicle from API
-ionic_app.service('get_vehicle_live', ['$http', '$q', function ($http, $q) {
+ionic_app.service('get_vehicle_live', ['$http', '$q', 'app_settings', function ($http, $q, app_settings) {
     this.live_feed = function (query, filters, fields) {
         var snd = {
             txt: query,
@@ -99,7 +95,7 @@ ionic_app.service('get_vehicle_live', ['$http', '$q', function ($http, $q) {
             _type: 'POST'
         };
         var promise = $q.defer();
-        $http.get(server_base_url + '?' + $.param(snd))
+        $http.get(app_settings.server_base_url + '?' + $.param(snd))
             .success(function (data) {
                 promise.resolve(data.results);
             });
@@ -109,7 +105,7 @@ ionic_app.service('get_vehicle_live', ['$http', '$q', function ($http, $q) {
 
 
 // Get Payment Receipt Stock Owner
-ionic_app.service('get_stock_owner', ['$http', '$q', function ($http, $q) {
+ionic_app.service('get_stock_owner', ['$http', '$q', 'app_settings', function ($http, $q, app_settings) {
     this.live_feed = function (query, filters, fields) {
         var snd = {
             txt: query,
@@ -120,7 +116,7 @@ ionic_app.service('get_stock_owner', ['$http', '$q', function ($http, $q) {
             _type: 'POST'
         };
         var promise = $q.defer();
-        $http.get(server_base_url + '?' + $.param(snd))
+        $http.get(app_settings.server_base_url + '?' + $.param(snd))
             .success(function (data) {
                 promise.resolve(data.results);
             });
@@ -130,29 +126,29 @@ ionic_app.service('get_stock_owner', ['$http', '$q', function ($http, $q) {
 
 
 // Create Payment Receipt
-ionic_app.service('create_new_payment_receipt', ['$http', function ($http) {
+ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
         var snd = {
             data: JSON.stringify(data)
         };
-        return $http.post(server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
+        return $http.post(app_settings.server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
     };
 }]);
 
 
 // Create Good Receipt
-ionic_app.service('create_new_good_receipt', ['$http', function ($http) {
+ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
         var snd = {
             data: JSON.stringify(data)
         };
-        return $http.post(server_base_url + '/api/resource/Goods Receipt', $.param(snd));
+        return $http.post(app_settings.server_base_url + '/api/resource/Goods Receipt', $.param(snd));
     };
 }]);
 
 
 // Send Image
-ionic_app.service('send_image', ['$http', function ($http) {
+ionic_app.service('send_image', ['$http', 'app_settings', function ($http, app_settings) {
     this.send = function (voucher_id, data, filename, doctype, type) {
         var snd = {
             from_form: '1',
@@ -166,7 +162,7 @@ ionic_app.service('send_image', ['$http', function ($http) {
             _type: 'POST'
 
         };
-        return $http.post(server_base_url, $.param(snd));
+        return $http.post(app_settings.server_base_url, $.param(snd));
     };
 }]);
 

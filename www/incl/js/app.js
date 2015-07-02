@@ -17,7 +17,6 @@ ionic_app.run(function ($ionicPlatform, $state) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-//        $state.go('main.good_receipt.acknowledgement');
         $state.go('main.login');
     });
 });
@@ -33,6 +32,31 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 'main_view': {
                     templateUrl: 'comp/main/main.html',
                     controller: 'main_controller'
+                }
+            },
+            resolve: {
+                resA: function ($cordovaFile, $q, app_settings) {
+                    var promise = $q.defer();
+                    document.addEventListener('deviceready', function () {
+                        $cordovaFile.checkFile(cordova.file.dataDirectory, "app_settings.txt")
+                            .then(function (success) {
+                                $cordovaFile.readAsText(cordova.file.dataDirectory, "app_settings.txt")
+                                    .then(function (success) {
+                                        var data = JSON.parse(success);
+                                        $.each(data, function (key, value) {
+                                            app_settings[key] = value;
+                                        });
+                                        promise.resolve();
+                                    }, function (error) {
+                                        console.log("Read As Text Error");
+                                        console.log(error);
+                                    });
+                            }, function (error) {
+                                console.log("Check File Error");
+                                console.log(error);
+                            });
+                    });
+                    return promise.promise;
                 }
             }
         })
@@ -201,12 +225,16 @@ ionic_app.constant('images_link_filled', [
 
 // Signature
 ionic_app.value('canvas_signature', {
-        back_image: '',
-        signature: '',
-        signature_pad: ''
-    }
+    back_image: '',
+    signature: '',
+    signature_pad: ''
+});
 
-);
+
+// File Settings
+ionic_app.value('app_settings', {
+    server_base_url: '/api'
+});
 
 
 // Angular Translate

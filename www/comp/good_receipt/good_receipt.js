@@ -50,10 +50,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
 
     // Read Data As URL
     me.read_data_url = function (path, file) {
-        $cordovaFile.readAsDataURL(path, file).then(function (success) {
-            $scope.new_good_receipt_search.customer_image = success;
-        }, function (error) {
-            console.log(error);
+        document.addEventListener('deviceready', function () {
+            $cordovaFile.readAsDataURL(path, file).then(function (success) {
+                $scope.new_good_receipt_search.customer_image = success;
+            }, function (error) {
+                console.log(error);
+            });
         });
     };
 
@@ -135,31 +137,35 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
 
     // Move File from one location to other
     me.file_move = function (file_name) {
-        $cordovaFile.moveFile(cordova.file.externalCacheDirectory, file_name, cordova.file.dataDirectory)
-            .then(function (success) {
-                me.read_data_url(cordova.file.dataDirectory, file_name);
-                me.geo_location();
-            }, function (error) {
-                console.log(error);
-            });
+        document.addEventListener('deviceready', function () {
+            $cordovaFile.moveFile(cordova.file.externalCacheDirectory, file_name, cordova.file.dataDirectory)
+                .then(function (success) {
+                    me.read_data_url(cordova.file.dataDirectory, file_name);
+                    me.geo_location();
+                }, function (error) {
+                    console.log(error);
+                });
+        });
     };
 
 
     // Geo Location
     me.geo_location = function () {
-        var posOptions = {
-            timeout: 10000,
-            enableHighAccuracy: true
-        };
-        $cordovaGeolocation
-            .getCurrentPosition(posOptions)
-            .then(function (position) {
-                $scope.new_good_receipt.loc_lat = position.coords.latitude;
-                $scope.new_good_receipt.loc_long = position.coords.longitude;
-                $state.transitionTo('main.good_receipt.take_picture_location');
-            }, function (err) {
-                console.log(err);
-            });
+        document.addEventListener('deviceready', function () {
+            var posOptions = {
+                timeout: 10000,
+                enableHighAccuracy: true
+            };
+            $cordovaGeolocation
+                .getCurrentPosition(posOptions)
+                .then(function (position) {
+                    $scope.new_good_receipt.loc_lat = position.coords.latitude;
+                    $scope.new_good_receipt.loc_long = position.coords.longitude;
+                    $state.transitionTo('main.good_receipt.take_picture_location');
+                }, function (err) {
+                    console.log(err);
+                });
+        });
     };
 
     $scope.customer_name_next = function () {
@@ -196,7 +202,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
 
     $scope.take_signature_button = function () {
         $scope.new_good_receipt_search.take_signature_button_disable = true;
-        html2canvas(document.getElementById('asd_asd'), {
+        html2canvas(document.getElementById('get_acknowledgement_information'), {
             onrendered: function (canvas) {
                 canvas_signature.back_image = canvas.toDataURL();
                 $scope.new_good_receipt_search.take_signature_button_disable = false;

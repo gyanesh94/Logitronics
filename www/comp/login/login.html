@@ -28,6 +28,18 @@
                 <button class="button button-large button-stable" style="min-width:120px;" on-tap="switch_to_hindi()">
                     Hindi
                 </button>
+                <br>
+                <br>
+            </div>
+            <label class="item item-input">
+                <span class="input-label">{{'URL' | translate }}</span>
+                <input type="text" ng-model="app_settings_copy.server_base_url">
+            </label>
+            <br>
+            <div align='center'>
+                <button class="button button-large button-balanced" on-tap="update_server_base_url()">
+                    Change
+                </button>
             </div>
         </div>
     </ion-content>

@@ -19,7 +19,9 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
             })
             .error(function (data) {
                 $scope.login.disable = false;
-                $cordovaToast.show(data.message, 'short', 'bottom');
+                if (data)
+                    if (data.message)
+                        $cordovaToast.show(data.message, 'short', 'bottom');
             });
     };
 
