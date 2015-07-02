@@ -16,9 +16,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
         loc_long: ''
     };
 
-    $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
-
-    $scope.new_good_receipt_search = {
+    $scope.new_good_receipt_search_object = {
         vehicle_search: function (query) {
             filters = {};
             fields = ['name', 'description'];
@@ -32,8 +30,22 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
         item_images_empty: images_link_empty,
         item_images_filled: images_link_filled,
         confirm_disable: false,
-        customer_image: ''
+        customer_image: '',
+        take_signature_button_disable: false
     };
+
+    $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
+
+    $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
+
+
+    // Log Out Event
+    $scope.$on('log_out_event', function (event, args) {
+        delete $scope.new_good_receipt;
+        $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
+        delete $scope.new_good_receipt_search;
+        $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
+    });
 
 
     // Read Data As URL
@@ -71,14 +83,15 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
         create_new_good_receipt.create_feed(data)
             .success(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
-                send_image.send(voucher_id, canvas_signature.signature, 'gr_' + voucher_id + '_signature.jpg', 'Goods Receipt').success(function (data) {
+                send_image.send(voucher_id, $scope.new_good_receipt_search.customer_image, 'gr_' + voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image').success(function (data) {
+                    $scope.new_good_receipt_search.customer_image = "";
+                    $scope.new_good_receipt.customer_image = {};
                 });
-                send_image.send(voucher_id, $scope.new_good_receipt_search.customer_image, 'gr_' + voucher_id + '_customer_image.jpg', 'Goods Receipt').success(function (data) {
-                    $scope.new_good_receipt_search.customer_image="";
-                    $scope.new_good_receipt.customer_image={};
-                });
+                send_image.send(voucher_id, canvas_signature.signature, 'gr_' + voucher_id + '_signature.jpg', 'Goods Receipt', 'signature').success(function (data) {});
                 delete $scope.new_good_receipt;
                 $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
+                delete $scope.new_good_receipt_search;
+                $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
@@ -112,7 +125,6 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
                     name: image_name
                 };
                 me.file_move(image_name);
-                me.geo_location();
                 $cordovaCamera.cleanup().then(); // only for FILE_URI
             }, function (err) {
                 console.log(err);
@@ -126,7 +138,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
         $cordovaFile.moveFile(cordova.file.externalCacheDirectory, file_name, cordova.file.dataDirectory)
             .then(function (success) {
                 me.read_data_url(cordova.file.dataDirectory, file_name);
-                $state.transitionTo('main.good_receipt.take_picture_location');
+                me.geo_location();
             }, function (error) {
                 console.log(error);
             });
@@ -136,14 +148,15 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
     // Geo Location
     me.geo_location = function () {
         var posOptions = {
-            timeout: 5000,
-            enableHighAccuracy: false
+            timeout: 10000,
+            enableHighAccuracy: true
         };
         $cordovaGeolocation
             .getCurrentPosition(posOptions)
             .then(function (position) {
                 $scope.new_good_receipt.loc_lat = position.coords.latitude;
                 $scope.new_good_receipt.loc_long = position.coords.longitude;
+                $state.transitionTo('main.good_receipt.take_picture_location');
             }, function (err) {
                 console.log(err);
             });
@@ -182,9 +195,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
     };
 
     $scope.take_signature_button = function () {
+        $scope.new_good_receipt_search.take_signature_button_disable = true;
         html2canvas(document.getElementById('asd_asd'), {
             onrendered: function (canvas) {
                 canvas_signature.back_image = canvas.toDataURL();
+                $scope.new_good_receipt_search.take_signature_button_disable = false;
                 $state.transitionTo('main.good_receipt.take_signature');
             }
         });
@@ -210,7 +225,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordo
 // Signature Pad Controller
 
 ionic_app.controller('take_signature_controller', function ($scope, canvas_signature) {
-
+    document.getElementById("signature_canvas_div").innerHTML = "<canvas id='signatureCanvas' style='border: 1px solid black;'></canvas>";
     var canvas = document.getElementById('signatureCanvas'),
         ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;

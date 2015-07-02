@@ -153,13 +153,15 @@ ionic_app.service('create_new_good_receipt', ['$http', function ($http) {
 
 // Send Image
 ionic_app.service('send_image', ['$http', function ($http) {
-    this.send = function (voucher_id, data, filename, doctype) {
+    this.send = function (voucher_id, data, filename, doctype, type) {
         var snd = {
             from_form: '1',
             doctype: doctype,
             docname: voucher_id,
             filename: filename,
             filedata: data,
+            client: 'app',
+            file_field: type,
             cmd: 'uploadfile',
             _type: 'POST'
 

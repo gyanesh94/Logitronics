@@ -22,6 +22,13 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
     };
 
 
+    // Log Out Event
+    $scope.$on('log_out_event', function (event, args) {
+        delete $scope.new_payment_receipt;
+        $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
+    });
+
+
     // Create Payment Receipt
     me.create_payment_receipt = function () {
         $scope.new_payment_receipt_search.confirm_disable = true;
