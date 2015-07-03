@@ -308,7 +308,9 @@ ionic_app.config(function ($translateProvider) {
         REFILL: 'Refill',
         NEW_CONNECTION: 'New Connection',
         ITEM: 'Item',
-        TAKE_NEW_IMAGE: 'Take New Image'
+        TAKE_NEW_IMAGE: 'Take New Image',
+        SKIP: 'Skip',
+        DETAILS: 'Details'
     });
 
     $translateProvider.translations('hi', {
@@ -348,7 +350,9 @@ ionic_app.config(function ($translateProvider) {
         REFILL: 'रिफिल',
         NEW_CONNECTION: 'नया कनेक्शन',
         ITEM: 'आइटम',
-        TAKE_NEW_IMAGE: 'नई छवि ले'
+        TAKE_NEW_IMAGE: 'नई छवि ले',
+        SKIP: 'स्किप',
+        DETAILS: 'विवरण'
     });
 
     $translateProvider.preferredLanguage('en');
