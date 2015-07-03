@@ -27,7 +27,7 @@
                     <span>{{'VOUCHER_ID' | translate}}</span>
                 </div>
                 <label class="item item-input" style="width:100%;">
-                    <input type="number" min="0" ng-model="new_payment_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}">
+                    <input type="number" min="1" ng-model="new_payment_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}" required>
                 </label>
             </div>
 
@@ -37,7 +37,7 @@
                     <span>{{'Quantity' | translate}}</span>
                 </div>
                 <label class="item item-input" style="width:100%;">
-                    <input type="number" min="0" ng-model="new_payment_receipt.quantity" placeholder="{{'QUANTITY' | translate}}">
+                    <input type="number" min="1" ng-model="new_payment_receipt.quantity" placeholder="{{'QUANTITY' | translate}}" required>
                 </label>
             </div>
 
@@ -47,7 +47,7 @@
                     <span>{{'AMOUNT_PER_ITEM' | translate}}</span>
                 </div>
                 <label class="item item-input" style="width:100%;">
-                    <input type="number" min="0" ng-model="new_payment_receipt.amount_per_item" placeholder="{{'AMOUNT_PER_ITEM' | translate}}">
+                    <input type="number" min="1" ng-model="new_payment_receipt.amount_per_item" placeholder="{{'AMOUNT_PER_ITEM' | translate}}" required>
                 </label>
             </div>
 

@@ -1,4 +1,4 @@
-<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+<ion-view view-title="{{'DETAILS' | translate}}">
     <ion-header-bar class="bar bar-subheader bar-stable">
         <h2 class="title">{{'CUSTOMER_NAME' | translate}}</h2>
     </ion-header-bar>
@@ -27,7 +27,7 @@
                         <span>{{'VOUCHER_ID' | translate}}</span>
                     </div>
                     <label class="item item-input" style="width:100%;">
-                        <input type="number" min="0" ng-model="new_good_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}">
+                        <input type="number" min="1" ng-model="new_good_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}" required>
                     </label>
                 </div>
 

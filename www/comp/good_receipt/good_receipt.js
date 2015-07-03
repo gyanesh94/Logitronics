@@ -103,7 +103,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                     message = JSON.parse(data._server_messages);
                 else
                     message = "Server Error";
-                $cordovaToast.show(message[0], 'short', 'bottom');
+                $cordovaToast.show(message, 'short', 'bottom');
             });
     };
 
@@ -189,6 +189,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         $state.transitionTo('main.good_receipt.item_delievered_quantity');
     };
 
+    $scope.item_delievered_name_next = function () {
+        $state.transitionTo('main.good_receipt.item_received_name');
+    };
+
     $scope.item_delievered_quantity_next = function () {
         $state.transitionTo('main.good_receipt.item_received_name');
     };
@@ -201,6 +205,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
     $scope.item_received_name_filled_next = function (index) {
         $scope.new_good_receipt.item_received_name = $scope.new_good_receipt_search.item_images_filled[index].id;
         $state.transitionTo('main.good_receipt.item_received_quantity');
+    };
+
+    $scope.item_received_name_next = function () {
+        $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
     $scope.item_received_quantity_next = function () {
