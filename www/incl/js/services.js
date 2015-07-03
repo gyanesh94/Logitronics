@@ -1,40 +1,44 @@
 // http error interceptor
-ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings',
-    function ($q, $location, $cordovaToast, login_sid, app_settings) {
-        return {
-            responseError: function (rejection) {
-                var stat = rejection.status;
-                var msg = '';
-                if (stat == 403)
-                    msg = 'Login Required';
-                else if (stat == 500)
-                    msg = 'Internal Server Error';
-                else if (stat == 501)
-                    msg = 'Server Error';
-                else if (stat == 502)
-                    msg = 'Server is Offline';
-                else if (stat == 503)
-                    msg = 'Server is Overload or down';
-                else if (stat == 504)
-                    msg = 'Server is Offline';
-                if (msg != '')
-                    $cordovaToast.show(msg, 'short', 'bottom');
-                return $q.reject(rejection);
-            },
-            request: function (config) {
-                var sid = "sid=" + login_sid.sid;
-                if (config.url.indexOf(app_settings.server_base_url) == 0) {
-                    if (config.url.indexOf('?') == -1) {
-                        config.url = config.url + '?' + sid;
-                        console.log(config);
-                    } else {
-                        config.url = config.url + '&' + sid;
-                        console.log(config);
-                    }
+ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings', '$cordovaNetwork', function ($q, $location, $cordovaToast, login_sid, app_settings, $cordovaNetwork) {
+    return {
+        responseError: function (rejection) {
+            var stat = rejection.status;
+            var msg = '';
+            if (stat == 403)
+                msg = 'Login Required';
+            else if (stat == 500)
+                msg = 'Internal Server Error';
+            else if (stat == 501)
+                msg = 'Server Error';
+            else if (stat == 502)
+                msg = 'Server is Offline';
+            else if (stat == 503)
+                msg = 'Server is Overload or down';
+            else if (stat == 504)
+                msg = 'Server is Offline';
+            if (msg != '')
+                $cordovaToast.show(msg, 'short', 'bottom');
+            return $q.reject(rejection);
+        },
+        request: function (config) {
+            var sid = "sid=" + login_sid.sid;
+            if (config.url.indexOf(app_settings.server_base_url) == 0) {
+                if ($cordovaNetwork.isOffline()) {
+                    $cordovaToast.show("Connect to Internet", 'short', 'bottom');
+                    config.timeout = 0;
+                    return config;
                 }
-                return config;
+                if (config.url.indexOf('?') == -1) {
+                    config.url = config.url + '?' + sid;
+                    console.log(config);
+                } else {
+                    config.url = config.url + '&' + sid;
+                    console.log(config);
+                }
             }
+            return config;
         }
+    }
 }]);
 
 
