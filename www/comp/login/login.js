@@ -22,11 +22,12 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
         login_authentication.login_authenticate($scope.login.username, $scope.login.password)
             .success(function (data) {
                 $scope.login.disable = false;
-                $scope.login.full_name = data.full_name;
                 sid = {
-                    sid: data.sid
+                    sid: data.sid,
+                    name: data.full_name
                 };
                 login_sid.sid = sid.sid;
+                login_sid.name = sid.name
                 $scope.record_sid(sid);
                 delete $scope.login;
                 $scope.login = angular.copy($scope.login_object);

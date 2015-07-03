@@ -13,10 +13,10 @@
             <div class="row">
                 <div class="col-50" align="center">
                     <div class="item item-divider">
-                        <h4 class="title">{{'EMPTY' | translate}}</h4>
+                        <h4 class="title">{{'FILLED' | translate}}</h4>
                     </div>
                     <ion-list>
-                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_empty" on-tap="item_delievered_name_empty_next($index)">
+                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_filled" on-tap="item_delievered_name_filled_next($index)">
                             <img ng-src="{{img.img_url}}" alt="{{img.id}}">
                             <h3 ng-bind="img.name"></h3>
                         </ion-item>
@@ -24,10 +24,10 @@
                 </div>
                 <div class="col-50" align="center">
                     <div class="item item-divider">
-                        <h4 class="title">{{'FILLED' | translate}}</h4>
+                        <h4 class="title">{{'EMPTY' | translate}}</h4>
                     </div>
                     <ion-list>
-                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_filled" on-tap="item_delievered_name_filled_next($index)">
+                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_empty" on-tap="item_delievered_name_empty_next($index)">
                             <img ng-src="{{img.img_url}}" alt="{{img.id}}">
                             <h3 ng-bind="img.name"></h3>
                         </ion-item>

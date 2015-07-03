@@ -75,7 +75,9 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                 $cordovaFile.readAsText(cordova.file.dataDirectory, "sid.txt")
                                     .then(function (success) {
                                         var data = JSON.parse(success);
-                                        login_sid.sid = data.sid;
+                                        $.each(data, function (key, value) {
+                                            login_sid[key] = value;
+                                        });
                                         promise.resolve();
                                         $state.go('main.select_receipt');
                                     }, function (error) {
@@ -212,11 +214,11 @@ ionic_app.constant('images_link_empty', [
         id: 'EC19',
         name: 'EC19'
     }, {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/ec35.jpg',
         id: 'EC35',
         name: 'EC35'
     }, {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/ec475vot.jpg',
         id: 'EC47.5',
         name: 'EC47.5'
     }, {
@@ -232,11 +234,11 @@ ionic_app.constant('images_link_filled', [
         id: 'FC19',
         name: 'FC19'
     }, {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/fc35.jpg',
         id: 'FC35',
         name: 'FC35'
     }, {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/fc475vot.jpg',
         id: 'FC47.5',
         name: 'FC47.5'
     }, {
@@ -262,7 +264,8 @@ ionic_app.value('app_settings', {
 
 // Login Session ID
 ionic_app.value('login_sid', {
-    sid: ''
+    sid: '',
+    name: ''
 });
 
 
