@@ -62,8 +62,11 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
-                message = JSON.parse(data._server_messages);
                 $scope.new_payment_receipt_search.confirm_disable = false;
+                if (data._server_messages)
+                    message = JSON.parse(data._server_messages);
+                else
+                    message = "Server Error";
                 $cordovaToast.show(message[0], 'short', 'bottom');
             });
     };

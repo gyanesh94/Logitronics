@@ -31,7 +31,8 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         item_images_filled: images_link_filled,
         confirm_disable: false,
         customer_image: '',
-        take_signature_button_disable: false
+        take_signature_button_disable: false,
+        take_signature_next_disable: false
     };
 
     $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
@@ -97,11 +98,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
+                $scope.new_good_receipt_search.confirm_disable = false;
                 if (data._server_messages)
                     message = JSON.parse(data._server_messages);
                 else
                     message = "Server Error";
-                $scope.new_good_receipt_search.confirm_disable = false;
                 $cordovaToast.show(message[0], 'short', 'bottom');
             });
     };
@@ -129,6 +130,8 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 me.file_move(image_name);
                 $cordovaCamera.cleanup().then(); // only for FILE_URI
             }, function (err) {
+                $scope.new_good_receipt_search.take_signature_next_disable = false;
+                $cordovaToast.show("Camera Not Working", 'short', 'bottom');
                 console.log(err);
             });
         }, false);
@@ -141,8 +144,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             $cordovaFile.moveFile(cordova.file.externalCacheDirectory, file_name, cordova.file.dataDirectory)
                 .then(function (success) {
                     me.read_data_url(cordova.file.dataDirectory, file_name);
+                    $scope.new_good_receipt_search.take_signature_next_disable = false;
+                    $state.transitionTo('main.good_receipt.take_picture_location');
                     me.geo_location();
                 }, function (error) {
+                    $scope.new_good_receipt_search.take_signature_next_disable = false;
+                    $cordovaToast.show("File Not Moved", 'short', 'bottom');
                     console.log(error);
                 });
         });
@@ -154,15 +161,15 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         document.addEventListener('deviceready', function () {
             var posOptions = {
                 timeout: 10000,
-                enableHighAccuracy: true
+                enableHighAccuracy: false
             };
             $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
                     $scope.new_good_receipt.loc_lat = position.coords.latitude;
                     $scope.new_good_receipt.loc_long = position.coords.longitude;
-                    $state.transitionTo('main.good_receipt.take_picture_location');
                 }, function (err) {
+                    $cordovaToast.show("Location not taken", 'short', 'bottom');
                     console.log(err);
                 });
         });
@@ -206,6 +213,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             onrendered: function (canvas) {
                 canvas_signature.back_image = canvas.toDataURL();
                 $scope.new_good_receipt_search.take_signature_button_disable = false;
+                $rootScope.$emit('signature_canvas_clear', {});
                 $state.transitionTo('main.good_receipt.take_signature');
             }
         });
@@ -213,11 +221,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
 
     $scope.take_signature_next = function () {
         canvas_signature.signature = canvas_signature.signature_pad.toDataURL('image/jpeg');
+        $scope.new_good_receipt_search.take_signature_next_disable = true;
         me.take_img();
     };
 
     $scope.take_new_image = function () {
-        $cordovaFile.removeFile(cordova.file.dataDirectory, $scope.new_good_receipt.customer_image.name)
+        $cordovaFile.removeFile(cordova.file.dataDirectory, $scope.new_good_receipt.customer_image.name);
         me.take_img();
     };
 
@@ -230,7 +239,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
 
 // Signature Pad Controller
 
-ionic_app.controller('take_signature_controller', function ($scope, canvas_signature) {
+ionic_app.controller('take_signature_controller', function ($scope, $rootScope, canvas_signature) {
     document.getElementById("signature_canvas_div").innerHTML = "<canvas id='signatureCanvas' style='border: 1px solid black;'></canvas>";
     var canvas = document.getElementById('signatureCanvas'),
         ctx = canvas.getContext("2d");
@@ -249,4 +258,8 @@ ionic_app.controller('take_signature_controller', function ($scope, canvas_signa
         canvas_signature.signature_pad.clear();
         background.src = canvas_signature.back_image;
     };
+
+    $rootScope.$on('signature_canvas_clear', function () {
+        $scope.clear_canvas();
+    });
 });
