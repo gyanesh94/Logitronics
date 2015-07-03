@@ -1,0 +1,59 @@
+<ion-view view-title="{{'PAYMENT_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'PAYMENT_RECEIPT_ACKNOWLEDGEMENT' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+            <div class="list">
+                <div class="item item-divider">
+                    {{'PAYMENT_RECEIPT_DETAILS' | translate}}
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'STOCK_OWNER' | translate}}: 
+                    <span ng-bind="new_payment_receipt.stock_owner.value"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'VOUCHER_ID' | translate}}: 
+                    <span ng-bind="new_payment_receipt.voucher_id"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'QUANTITY' | translate}}: 
+                    <span ng-bind="new_payment_receipt.quantity"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'AMOUNT_PER_ITEM' | translate}}: 
+                    <span ng-bind="new_payment_receipt.amount_per_item"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'TRANSACTION_TYPE' | translate}}: 
+                    <span ng-bind="new_payment_receipt.transaction_type"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'ITEM' | translate}}:
+                    <span ng-bind="new_payment_receipt.item"></span>
+                    </span>
+                </div>
+            </div>
+            <button class="button button-block button-calm" ng-disabled="new_payment_receipt_search.confirm_disable" on-tap="payment_receipt_acknowledgement()">{{'CONFIRM' | translate}}</button>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+    </ion-footer-bar>
+</ion-view>

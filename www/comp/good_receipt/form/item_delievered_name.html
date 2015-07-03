@@ -1,0 +1,41 @@
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'ITEM_DELIEVERED_NAME' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+            <div class="row">
+                <div class="col-50" align="center">
+                    <div class="item item-divider">
+                        <h4 class="title">{{'FILLED' | translate}}</h4>
+                    </div>
+                    <ion-list>
+                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_filled" on-tap="item_delievered_name_filled_next($index)">
+                            <img ng-src="{{img.img_url}}" alt="{{img.id}}">
+                            <h3 ng-bind="img.name"></h3>
+                        </ion-item>
+                    </ion-list>
+                </div>
+                <div class="col-50" align="center">
+                    <div class="item item-divider">
+                        <h4 class="title">{{'EMPTY' | translate}}</h4>
+                    </div>
+                    <ion-list>
+                        <ion-item ng-repeat="img in new_good_receipt_search.item_images_empty" on-tap="item_delievered_name_empty_next($index)">
+                            <img ng-src="{{img.img_url}}" alt="{{img.id}}">
+                            <h3 ng-bind="img.name"></h3>
+                        </ion-item>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+    </ion-footer-bar>
+</ion-view>

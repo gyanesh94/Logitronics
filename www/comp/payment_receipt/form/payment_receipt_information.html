@@ -1,0 +1,84 @@
+<ion-view view-title="{{'PAYMENT_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'PAYMENT_RECEIPT_INFORMATION' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+
+            <!-- Stock Owner  -->
+            <div class="card">
+                <div class="item item-divider">
+                    <span>{{'STOCK_OWNER' | translate}}</span>
+                </div>
+                <label class="item item-input" style="width:100%;">
+                    <ion-autocomplete ng-model="new_payment_receipt.stock_owner" item-view-value-key="value" items-method="new_payment_receipt_search.stock_owner_search(query)" placeholder="{{'STOCK_OWNER' | translate}}" />
+                </label>
+            </div>
+
+            <!-- Voucher ID  -->
+            <div class="card">
+                <div class="item item-divider">
+                    <span>{{'VOUCHER_ID' | translate}}</span>
+                </div>
+                <label class="item item-input" style="width:100%;">
+                    <input type="number" min="0" ng-model="new_payment_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}">
+                </label>
+            </div>
+
+            <!--  Quantity  -->
+            <div class="card">
+                <div class="item item-divider">
+                    <span>{{'Quantity' | translate}}</span>
+                </div>
+                <label class="item item-input" style="width:100%;">
+                    <input type="number" min="0" ng-model="new_payment_receipt.quantity" placeholder="{{'QUANTITY' | translate}}">
+                </label>
+            </div>
+
+            <!--  Amount Per Item  -->
+            <div class="card">
+                <div class="item item-divider">
+                    <span>{{'AMOUNT_PER_ITEM' | translate}}</span>
+                </div>
+                <label class="item item-input" style="width:100%;">
+                    <input type="number" min="0" ng-model="new_payment_receipt.amount_per_item" placeholder="{{'AMOUNT_PER_ITEM' | translate}}">
+                </label>
+            </div>
+
+            <!-- Item  -->
+            <div class="list">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        {{'ITEM' | translate}}
+                    </div>
+                    <select ng-model="new_payment_receipt.item">
+                        <option>FC19</option>
+                    </select>
+                </label>
+            </div>
+
+            <!-- Transaction Type  -->
+            <div class="list">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        {{'TRANSACTION_TYPE' | translate}}
+                    </div>
+                    <select ng-model="new_payment_receipt.transaction_type">
+                        <option>{{'REFILL' | translate}}</option>
+                        <option>{{'TV_OUT' | translate}}</option>
+                        <option>{{'NEW_CONNECTION' | translate}}</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" on-tap="payment_receipt_next()">{{'NEXT' | translate}}</button>
+    </ion-footer-bar>
+</ion-view>

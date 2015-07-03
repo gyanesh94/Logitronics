@@ -2,28 +2,53 @@
 <html>
 
 <head>
+    <!-- Enable all requests, inline styles, and eval() -->
+
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://192.168.1.6:35729 http://localhost:35729;">
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
-
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="incl/css/style.css" rel="stylesheet">
-    <link href="lib/angular_material/angular-material.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <script src="incl/js/jquery.js"></script>
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
+    <script src="incl/js/ng-cordova.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <!--   ion autocomplete  -->
+    <link href="incl/ion-autocomplete/ion-autocomplete.css" rel="stylesheet">
+    <script src="incl/ion-autocomplete/ion-autocomplete.js"></script>
+
+    <!-- Signature Pad  -->
+    <script src="incl/js/signature_pad.js"></script>
+
+    <!--  Moment JS for Time -->
+    <script src="incl/js/moment.js"></script>
+
+    <!--  Html 2 Canvas -->
+    <script src="incl/js/html2canvas.js"></script>
+
+    <!--    angular material  -->
+    <link href="incl/angular-material/angular-material.css" ref="stylesheet">
+    <script src="incl/angular-material/angular-animate.js"></script>
+    <script src="incl/angular-material/angular-aria.js"></script>
+    <script src="incl/angular-material/angular-material.js"></script>
+
+    <!-- angular translate  -->
+    <script src="incl/angular-translate/angular-translate.js"></script>
+
     <!-- your app's js -->
-    <script src="lib/angular_material/angular-material.js"></script>
-    <script src="lib/angular_material/angular-animate.js"></script>
-    <script src="lib/angular_material/angular-aria.js"></script>
     <script src="incl/js/app.js"></script>
     <script src="incl/js/services.js"></script>
     <script src="comp/login/login.js"></script>

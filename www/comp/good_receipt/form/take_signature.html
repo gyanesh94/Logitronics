@@ -1,0 +1,19 @@
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'SIGNATURE' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content scroll="false">
+        <div id="signature_canvas_div">
+        </div>
+
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class='button button-energized' style="padding: 0 30px;" ng-click='clear_canvas()'>{{'CLEAR' | translate}}</button>
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" ng-disabled="new_good_receipt_search.take_signature_next_disable" on-tap="take_signature_next()">{{'NEXT' | translate}}</button>
+    </ion-footer-bar>
+</ion-view>

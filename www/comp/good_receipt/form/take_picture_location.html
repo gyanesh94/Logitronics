@@ -1,0 +1,25 @@
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'SIGNATURE' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div>
+            <br>
+            <img ng-src="{{new_good_receipt_search.customer_image}}" id="customer_image_tag" />
+            <script>
+                var img_tag = document.getElementById("customer_image_tag");
+                img_tag.width = window.innerWidth;
+                img_tag.height = window.innerHeight - 170;
+            </script>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class='button button-energized' style="padding: 0 30px;" ng-click='take_new_image()'>{{'TAKE_NEW_IMAGE' | translate}}</button>
+        <button class="button pull-right" style="padding: 0 30px;font-color:#000" ng-disabled="new_good_receipt_search.confirm_disable" on-tap="confirm_good_receipt()">{{'CONFIRM' | translate}}</button>
+    </ion-footer-bar>
+</ion-view>

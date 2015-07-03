@@ -1,0 +1,71 @@
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">{{'ACKNOWLEDGEMENT' | translate}}</h2>
+    </ion-header-bar>
+    <ion-nav-buttons side="right">
+        <button class="button" on-tap="log_out()">
+            {{'LOG_OUT' | translate}}
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div id="get_acknowledgement_information">
+            <br>
+            <div class="list">
+                <div class="item item-divider">
+                    {{'GOOD_RECEIPT_DETAILS' | translate}}
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                   {{'CUSTOMER_NAME' | translate}}: 
+                    <span ng-bind="new_good_receipt.customer_name.value"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'VOUCHER_ID' | translate}}: 
+                    <span ng-bind="new_good_receipt.voucher_id"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                   {{'ITEM_DELIEVERED_NAME' | translate}}: 
+                    <span ng-bind="new_good_receipt.item_delievered_name"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'ITEM_DELIEVERED_QUANTITY' | translate}}: 
+                    <span ng-bind="new_good_receipt.item_delievered_quantity"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                   {{'ITEM_RECEIVED_NAME' | translate}}: 
+                    <span ng-bind="new_good_receipt.item_received_name"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'ITEM_RECEIVED_QUANTITY' | translate}}: 
+                    <span ng-bind="new_good_receipt.item_received_quantity"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                    {{'VEHICLE_NUMBER' | translate}}: 
+                    <span ng-bind="new_good_receipt.vehicle_number.value"></span>
+                    </span>
+                </div>
+                <div class="item item-input">
+                    <span class="input-label">
+                   {{'CUSTOMER_DOCUMENT_ID' | translate}}: 
+                    <span ng-bind="new_good_receipt.customer_document_id"></span>
+                    </span>
+                </div>
+            </div>
+            <button class="button button-block button-calm" ng-disabled="new_good_receipt_search.take_signature_button_disable" on-tap="take_signature_button()">{{'TAKE_SIGNATURE' | translate}}</button>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+    </ion-footer-bar>
+</ion-view>
