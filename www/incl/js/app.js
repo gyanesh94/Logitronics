@@ -259,7 +259,7 @@ ionic_app.value('canvas_signature', {
 
 // File Settings
 ionic_app.value('app_settings', {
-    server_base_url: '/api'
+    server_base_url: 'https://erp.arungas.com'
 });
 
 // Login Session ID
