@@ -1,4 +1,4 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $state, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image) {
+ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image) {
     var me = this;
 
     $scope.new_good_receipt_object = {

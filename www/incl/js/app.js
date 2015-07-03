@@ -23,8 +23,6 @@ ionic_app.run(function ($ionicPlatform, $state) {
 
 ionic_app.config(function ($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('/main/login');
-
     $stateProvider.state('main', {
             url: '/main',
             abstract: true,
@@ -32,6 +30,15 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 'main_view': {
                     templateUrl: 'comp/main/main.html',
                     controller: 'main_controller'
+                }
+            }
+        })
+        .state('main.login', {
+            url: '/login',
+            views: {
+                'content_view': {
+                    templateUrl: 'comp/login/login.html',
+                    controller: 'login_controller'
                 }
             },
             resolve: {
@@ -50,22 +57,39 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                     }, function (error) {
                                         console.log("Read As Text Error");
                                         console.log(error);
+                                        promise.resolve();
                                     });
                             }, function (error) {
                                 console.log("Check File Error");
                                 console.log(error);
+                                promise.resolve();
                             });
                     });
                     return promise.promise;
-                }
-            }
-        })
-        .state('main.login', {
-            url: '/login',
-            views: {
-                'content_view': {
-                    templateUrl: 'comp/login/login.html',
-                    controller: 'login_controller'
+                },
+                resB: function ($cordovaFile, $q, $state, login_sid) {
+                    var promise = $q.defer();
+                    document.addEventListener('deviceready', function () {
+                        $cordovaFile.checkFile(cordova.file.dataDirectory, "sid.txt")
+                            .then(function (success) {
+                                $cordovaFile.readAsText(cordova.file.dataDirectory, "sid.txt")
+                                    .then(function (success) {
+                                        var data = JSON.parse(success);
+                                        login_sid.sid = data.sid;
+                                        promise.resolve();
+                                        $state.go('main.select_receipt');
+                                    }, function (error) {
+                                        console.log("Read As Text Error");
+                                        console.log(error);
+                                        promise.resolve();
+                                    });
+                            }, function (error) {
+                                console.log("Check SID File Error");
+                                console.log(error);
+                                promise.resolve();
+                            });
+                    });
+                    return promise.promise;
                 }
             }
         })
@@ -184,7 +208,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
 
 ionic_app.constant('images_link_empty', [
     {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/ec19.jpg',
         id: 'EC19',
         name: 'EC19'
     }, {
@@ -204,7 +228,7 @@ ionic_app.constant('images_link_empty', [
 
 ionic_app.constant('images_link_filled', [
     {
-        img_url: 'incl/img/ionic.png',
+        img_url: 'incl/img/fc19.jpg',
         id: 'FC19',
         name: 'FC19'
     }, {
@@ -234,6 +258,11 @@ ionic_app.value('canvas_signature', {
 // File Settings
 ionic_app.value('app_settings', {
     server_base_url: '/api'
+});
+
+// Login Session ID
+ionic_app.value('login_sid', {
+    sid: ''
 });
 
 

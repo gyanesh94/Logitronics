@@ -1,6 +1,6 @@
 // http error interceptor
-ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast',
-    function ($q, $location, $cordovaToast) {
+ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings',
+    function ($q, $location, $cordovaToast, login_sid, app_settings) {
         return {
             responseError: function (rejection) {
                 var stat = rejection.status;
@@ -20,6 +20,19 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                 if (msg != '')
                     $cordovaToast.show(msg, 'short', 'bottom');
                 return $q.reject(rejection);
+            },
+            request: function (config) {
+                var sid = "sid=" + login_sid.sid;
+                if (config.url.indexOf(app_settings.server_base_url) == 0) {
+                    if (config.url.indexOf('?') == -1) {
+                        config.url = config.url + '?' + sid;
+                        console.log(config);
+                    } else {
+                        config.url = config.url + '&' + sid;
+                        console.log(config);
+                    }
+                }
+                return config;
             }
         }
 }]);

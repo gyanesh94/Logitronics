@@ -1,11 +1,15 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, app_settings) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, app_settings, login_sid) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
         $rootScope.$broadcast('log_out_event', {
             message: 'logout'
         });
-        $state.transitionTo('main.login');
+        $cordovaFile.removeFile(cordova.file.dataDirectory, "sid.txt")
+            .then(function (success) {
+                login_sid.sid = '';
+                $state.transitionTo('main.login');
+            }, function (error) {});
     };
 
     // update app settings file
