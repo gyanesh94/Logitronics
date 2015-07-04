@@ -1,4 +1,4 @@
-ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, switch_preffered_language, login_authentication, login_sid) {
+ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, login_authentication, login_sid) {
 
     $ionicHistory.clearHistory();
 
@@ -41,13 +41,5 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                     if (data.message)
                         $cordovaToast.show(data.message, 'short', 'bottom');
             });
-    };
-
-    $scope.switch_to_english = function () {
-        switch_preffered_language.translate_language('en');
-    };
-
-    $scope.switch_to_hindi = function () {
-        switch_preffered_language.translate_language('hi');
     };
 });
