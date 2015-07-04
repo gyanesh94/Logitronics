@@ -1,4 +1,6 @@
-ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $cordovaFile, switch_preffered_language, login_authentication, login_sid) {
+ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, switch_preffered_language, login_authentication, login_sid) {
+
+    $ionicHistory.clearHistory();
 
     $scope.login_object = {
         username: '',
