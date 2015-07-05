@@ -12,4 +12,3 @@ gen
 out
 # Gradle builds
 /build
-*.DS_Store

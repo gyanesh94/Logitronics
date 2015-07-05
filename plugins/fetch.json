@@ -79,14 +79,5 @@
         },
         "is_top_level": true,
         "variables": {}
-    },
-    "com.red_folder.phonegap.plugin.backgroundservice": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Red-Folder/bgs-core.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
     }
 }
