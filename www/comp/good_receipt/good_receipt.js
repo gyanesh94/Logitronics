@@ -99,11 +99,14 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             })
             .error(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
-                if (data._server_messages)
+                if (data._server_messages) {
                     message = JSON.parse(data._server_messages);
-                else
+                    $cordovaToast.show(message[0], 'short', 'bottom');
+                } else {
                     message = "Server Error";
-                $cordovaToast.show(message, 'short', 'bottom');
+                    $cordovaToast.show(message, 'short', 'bottom');
+                }
+
             });
     };
 
