@@ -239,6 +239,13 @@ module.exports = [
     {
         "file": "plugins/nl.x-services.plugins.toast/test/tests.js",
         "id": "nl.x-services.plugins.toast.tests"
+    },
+    {
+        "file": "plugins/com.ionic.deploy/www/ionicdeploy.js",
+        "id": "com.ionic.deploy.IonicDeploy",
+        "clobbers": [
+            "IonicDeploy"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -253,7 +260,8 @@ module.exports.metadata =
     "cordova-plugin-network-information": "1.0.1",
     "cordova-plugin-splashscreen": "2.1.0",
     "cordova-plugin-whitelist": "1.0.0",
-    "nl.x-services.plugins.toast": "2.0.4"
+    "nl.x-services.plugins.toast": "2.0.4",
+    "com.ionic.deploy": "0.2.1"
 }
 // BOTTOM OF METADATA
 });

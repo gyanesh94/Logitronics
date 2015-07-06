@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 
-var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ion-autocomplete', 'pascalprecht.translate', 'ngCordova']);
+var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ionic.service.core', 'ionic.service.deploy', 'ion-autocomplete', 'pascalprecht.translate', 'ngCordova']);
 
 ionic_app.run(function ($ionicPlatform, $state) {
     $ionicPlatform.ready(function () {
@@ -207,6 +207,17 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
         });
 });
 
+
+// Ionic App Deploy
+ionic_app.config(['$ionicAppProvider', function($ionicAppProvider) {
+  // Identify app
+  $ionicAppProvider.identify({
+    // The App ID (from apps.ionic.io) for the server
+    app_id: 'a3f534c8',
+    // The public API key all services will use for this app
+    api_key: 'a967e07802022c1a7df978b819f9e76e431c560c5f2603d5'
+  });
+}])
 
 ionic_app.constant('images_link_empty', [
     {

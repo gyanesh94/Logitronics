@@ -66,4 +66,8 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,root" />
+    <feature name="IonicDeploy">
+        <param name="android-package" value="com.ionic.deploy.IonicDeploy" />
+        <param name="onload" value="true" />
+    </feature>
 </widget>
