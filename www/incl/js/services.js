@@ -1,5 +1,5 @@
 // http error interceptor
-ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings', '$cordovaNetwork', function ($q, $location, $cordovaToast, login_sid, app_settings, $cordovaNetwork) {
+ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings', '$cordovaNetwork', 'track_event', function ($q, $location, $cordovaToast, login_sid, app_settings, $cordovaNetwork, track_event) {
     return {
         responseError: function (rejection) {
             var stat = rejection.status;
@@ -18,6 +18,7 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                 msg = 'Server is Offline';
             if (msg != '')
                 $cordovaToast.show(msg, 'short', 'bottom');
+            track_event.track('Respone', 'Error', stat + " " + login_sid.name);
             return $q.reject(rejection);
         },
         request: function (config) {
@@ -48,6 +49,15 @@ ionic_app.config(['$httpProvider',
         $httpProvider.interceptors.push('myHttpResponseInterceptor');
 }]);
 
+
+// Google Analytics Track Event
+ionic_app.service('track_event', [function () {
+    this.track = function (category, action, label) {
+        if (typeof analytics !== "undefined") {
+            analytics.trackEvent(category, action, label);
+        }
+    };
+}]);
 
 
 // Switch Preffered Language

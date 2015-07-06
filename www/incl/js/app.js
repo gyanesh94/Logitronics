@@ -17,6 +17,13 @@ ionic_app.run(function ($ionicPlatform, $state) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+        if (typeof analytics !== undefined) {
+            analytics.startTrackerWithId("UA-64798388-1");
+            analytics.debugMode();
+            console.log("Google Analytics Deployed");
+        } else {
+            console.log("Google Analytics Unavailable");
+        }
         $state.go('main.login');
     });
 });
@@ -78,6 +85,9 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                         $.each(data, function (key, value) {
                                             login_sid[key] = value;
                                         });
+                                        if (typeof analytics !== "undefined") {
+                                            analytics.setUserId(login_sid.name);
+                                        }
                                         promise.resolve();
                                         $state.go('main.select_receipt');
                                     }, function (error) {
@@ -209,14 +219,14 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
 
 
 // Ionic App Deploy
-ionic_app.config(['$ionicAppProvider', function($ionicAppProvider) {
-  // Identify app
-  $ionicAppProvider.identify({
-    // The App ID (from apps.ionic.io) for the server
-    app_id: 'a3f534c8',
-    // The public API key all services will use for this app
-    api_key: 'a967e07802022c1a7df978b819f9e76e431c560c5f2603d5'
-  });
+ionic_app.config(['$ionicAppProvider', function ($ionicAppProvider) {
+    // Identify app
+    $ionicAppProvider.identify({
+        // The App ID (from apps.ionic.io) for the server
+        app_id: 'a3f534c8',
+        // The public API key all services will use for this app
+        api_key: 'a967e07802022c1a7df978b819f9e76e431c560c5f2603d5'
+    });
 }])
 
 
