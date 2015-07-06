@@ -46,12 +46,15 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.doUpdate = function () {
         $ionicDeploy.update().then(function (res) {
             console.log('Ionic Deploy: Update Success! ', res);
-            track_event.track('Ionic Deploy', "Update Successfull", res + " " + login_sid.name);
+            $cordovaToast.show("Update Successful", 'short', 'bottom');
+            track_event.track('Ionic Deploy', "Update Successful", res + " " + login_sid.name);
         }, function (err) {
             console.log('Ionic Deploy: Update error! ', err);
+            $cordovaToast.show("Update Error", 'short', 'bottom');
             track_event.track('Ionic Deploy', "Update Error", err + " " + login_sid.name);
         }, function (prog) {
             console.log('Ionic Deploy: Progress... ', prog);
+            $cordovaToast.show("Update in Progress... ", 'short', 'bottom');
         });
     };
 
@@ -60,9 +63,11 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         console.log('Ionic Deploy: Checking for updates');
         $ionicDeploy.check().then(function (hasUpdate) {
             console.log('Ionic Deploy: Update available: ' + hasUpdate);
+            $cordovaToast.show("Update available", 'short', 'bottom');
             $scope.hasUpdate = hasUpdate;
         }, function (err) {
             console.error('Ionic Deploy: Unable to check for updates', err);
+            $cordovaToast.show("Unable to check for updates", 'short', 'bottom');
             track_event.track('Ionic Deploy', "Check for update Error", err + " " + login_sid.name);
         });
     }

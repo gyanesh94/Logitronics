@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaGoogleAnalytics, switch_preffered_language, app_settings, login_sid, track_event) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, switch_preffered_language, app_settings, login_sid, track_event) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -8,8 +8,8 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $cordovaFile.removeFile(cordova.file.dataDirectory, "sid.txt")
             .then(function (success) {
                 login_sid.sid = '';
+                track_event.track('Logout', 'Successfull', login_sid.name);
                 login_sid.name = '';
-                track_event.track('Logout', 'Successfull', '');
                 $state.transitionTo('main.login');
             }, function (error) {});
     };

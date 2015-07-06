@@ -63,7 +63,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
                 $scope.new_payment_receipt_search.confirm_disable = false;
                 delete $scope.new_payment_receipt;
                 $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
-                track_event.track('Payment Receipt', 'Confirmed', JSON.stringify(final_data) + " " + login_sid.name);
+                track_event.track('Payment Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {

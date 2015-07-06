@@ -99,7 +99,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
                 delete $scope.new_good_receipt_search;
                 $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
-                track_event.track('Goods Receipt', 'Confirmed', JSON.stringify(final_data) + " " + login_sid.name);
+                track_event.track('Goods Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
