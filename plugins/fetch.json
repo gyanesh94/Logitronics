@@ -78,5 +78,14 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "com.ionic.deploy": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/driftyco/ionic-plugins-deploy",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

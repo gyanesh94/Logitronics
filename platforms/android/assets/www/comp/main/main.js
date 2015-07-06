@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, switch_preffered_language, app_settings, login_sid) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, switch_preffered_language, app_settings, login_sid) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -39,4 +39,26 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.switch_to_hindi = function () {
         switch_preffered_language.translate_language('hi');
     };
+
+    // Update app code with new release from Ionic Deploy
+    $scope.doUpdate = function () {
+        $ionicDeploy.update().then(function (res) {
+            console.log('Ionic Deploy: Update Success! ', res);
+        }, function (err) {
+            console.log('Ionic Deploy: Update error! ', err);
+        }, function (prog) {
+            console.log('Ionic Deploy: Progress... ', prog);
+        });
+    };
+
+    // Check Ionic Deploy for new code
+    $scope.checkForUpdates = function () {
+        console.log('Ionic Deploy: Checking for updates');
+        $ionicDeploy.check().then(function (hasUpdate) {
+            console.log('Ionic Deploy: Update available: ' + hasUpdate);
+            $scope.hasUpdate = hasUpdate;
+        }, function (err) {
+            console.error('Ionic Deploy: Unable to check for updates', err);
+        });
+    }
 });
