@@ -219,6 +219,7 @@ ionic_app.config(['$ionicAppProvider', function($ionicAppProvider) {
   });
 }])
 
+
 ionic_app.constant('images_link_empty', [
     {
         img_url: 'incl/img/ec19.jpg',
