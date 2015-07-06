@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, switch_preffered_language, app_settings, login_sid) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, switch_preffered_language, app_settings, login_sid, track_event) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -8,6 +8,8 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $cordovaFile.removeFile(cordova.file.dataDirectory, "sid.txt")
             .then(function (success) {
                 login_sid.sid = '';
+                track_event.track('Logout', 'Successfull', login_sid.name);
+                login_sid.name = '';
                 $state.transitionTo('main.login');
             }, function (error) {});
     };
@@ -44,8 +46,10 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.doUpdate = function () {
         $ionicDeploy.update().then(function (res) {
             console.log('Ionic Deploy: Update Success! ', res);
+            track_event.track('Ionic Deploy', "Update Successfull", res + " " + login_sid.name);
         }, function (err) {
             console.log('Ionic Deploy: Update error! ', err);
+            track_event.track('Ionic Deploy', "Update Error", err + " " + login_sid.name);
         }, function (prog) {
             console.log('Ionic Deploy: Progress... ', prog);
         });
@@ -59,6 +63,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             $scope.hasUpdate = hasUpdate;
         }, function (err) {
             console.error('Ionic Deploy: Unable to check for updates', err);
+            track_event.track('Ionic Deploy', "Check for update Error", err + " " + login_sid.name);
         });
     }
 });
