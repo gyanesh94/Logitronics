@@ -1,6 +1,10 @@
-ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, login_authentication, login_sid) {
+ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, login_authentication, login_sid, track_event) {
 
     $ionicHistory.clearHistory();
+
+    if (typeof analytics !== "undefined") {
+        analytics.trackView("Login View");
+    }
 
     $scope.login_object = {
         username: '',
@@ -28,6 +32,10 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                     sid: data.sid,
                     name: data.full_name
                 };
+                if (typeof analytics !== "undefined") {
+                    analytics.setUserId(sid.name);
+                }
+                track_event.track('Login', 'Successful', sid.name);
                 login_sid.sid = sid.sid;
                 login_sid.name = sid.name
                 $scope.record_sid(sid);
@@ -37,9 +45,13 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
             })
             .error(function (data) {
                 $scope.login.disable = false;
-                if (data)
-                    if (data.message)
+                if (data) {
+                    if (data.message) {
                         $cordovaToast.show(data.message, 'short', 'bottom');
+                        track_event.track('Login', 'Failure', data.message + " " + scope.login.username);
+                    }
+                }
+                track_event.track('Login', 'Login Failure', scope.login.username);
             });
     };
 });

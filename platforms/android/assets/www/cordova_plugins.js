@@ -246,6 +246,13 @@ module.exports = [
         "clobbers": [
             "IonicDeploy"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-google-analytics/www/analytics.js",
+        "id": "cordova-plugin-google-analytics.UniversalAnalytics",
+        "clobbers": [
+            "analytics"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -261,7 +268,9 @@ module.exports.metadata =
     "cordova-plugin-splashscreen": "2.1.0",
     "cordova-plugin-whitelist": "1.0.0",
     "nl.x-services.plugins.toast": "2.0.4",
-    "com.ionic.deploy": "0.2.1"
+    "com.ionic.deploy": "0.2.1",
+    "cordova-plugin-google-analytics": "0.7.2",
+    "com.google.playservices": "19.0.0"
 }
 // BOTTOM OF METADATA
 });

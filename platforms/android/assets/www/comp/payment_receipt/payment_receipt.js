@@ -1,5 +1,9 @@
-ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, get_stock_owner, create_new_payment_receipt) {
+ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, get_stock_owner, create_new_payment_receipt, track_event, login_sid) {
     var me = this;
+
+    if (typeof analytics !== "undefined") {
+        analytics.trackView("Payment Receipt View");
+    }
 
     $scope.new_payment_receipt_object = {
         quantity: '',
@@ -37,7 +41,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
         qty = $scope.new_payment_receipt.quantity;
         amt_per_item = $scope.new_payment_receipt.amount_per_item;
         total = qty * amt_per_item;
-        data = {
+        final_data = {
             stock_owner: $scope.new_payment_receipt.stock_owner.value,
             qty: qty,
             docstatus: 1,
@@ -54,20 +58,25 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
             fiscal_year: "2015-16",
             item: $scope.new_payment_receipt.item
         };
-        create_new_payment_receipt.create_feed(data)
+        create_new_payment_receipt.create_feed(final_data)
             .success(function (data) {
                 $scope.new_payment_receipt_search.confirm_disable = false;
                 delete $scope.new_payment_receipt;
                 $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
+                track_event.track('Payment Receipt', 'Confirmed', JSON.stringify(final_data) + " " + login_sid.name);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
                 $scope.new_payment_receipt_search.confirm_disable = false;
-                if (data._server_messages)
+                if (data._server_messages) {
                     message = JSON.parse(data._server_messages);
-                else
+                    $cordovaToast.show(message[0], 'short', 'bottom');
+                    track_event.track('Payment Receipt', "Error", message[0] + " " + login_sid.name);
+                } else {
                     message = "Server Error";
-                $cordovaToast.show(message[0], 'short', 'bottom');
+                    $cordovaToast.show(message, 'short', 'bottom');
+                    track_event.track('Payment Receipt', "Error", message + " " + login_sid.name);
+                }
             });
     };
 

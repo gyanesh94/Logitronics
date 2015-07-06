@@ -43,6 +43,10 @@
                         {
                             "xml": "<feature name=\"IonicDeploy\"><param name=\"android-package\" value=\"com.ionic.deploy.IonicDeploy\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"UniversalAnalytics\"><param name=\"android-package\" value=\"com.danielcwilson.plugins.analytics.UniversalAnalyticsPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -64,6 +68,16 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 2
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                            "count": 1
+                        }
+                    ],
+                    "/manifest/application": [
+                        {
+                            "xml": "<meta-data android:name=\"com.google.android.gms.version\" android:value=\"@integer/google_play_services_version\" />",
                             "count": 1
                         }
                     ]
@@ -104,7 +118,14 @@
         },
         "com.ionic.deploy": {
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
+        },
+        "cordova-plugin-google-analytics": {
+            "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "com.google.playservices": {
+            "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
+        }
+    }
 }
