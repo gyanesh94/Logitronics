@@ -121,6 +121,9 @@
         },
         "cordova-plugin-google-analytics": {
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         }
     },
     "dependent_plugins": {
