@@ -17,7 +17,7 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-        
+
         // Google Analytics
         if (typeof analytics !== undefined) {
             analytics.startTrackerWithId("UA-64798388-1");
@@ -26,26 +26,24 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         } else {
             console.log("Google Analytics Unavailable");
         }
-        
-        
+
+
         // Sqlite DB Check
         var db = $cordovaSQLite.openDB("my.db");
-        
-        $scope.execute = function () {
-            var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INT PRIMARY KEY, METADATA TEXT, CHECK INT DEFAULT 0)";
-            $cordovaSQLite.execute(db, query, []).then(function (res) {
-                console.log("Receipt_Data Table Created");
-            }, function (err) {
-                console.error(err);
-            });
-            var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT, PARENT_ID INT, CHECK INT DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
-            $cordovaSQLite.execute(db, query, []).then(function (res) {
-                console.log("Receipt_Files Table Created");
-            }, function (err) {
-                console.error(err);
-            });
-        };
 
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INTEGER PRIMARY KEY, METADATA TEXT, CHECK INTEGER DEFAULT 0)";
+        $cordovaSQLite.execute(db, query, []).then(function (res) {
+            console.log("Receipt_Data Table Created");
+        }, function (err) {
+            console.error(err);
+        });
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT, PARENT_ID INTEGER, CHECK INTEGER DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
+        $cordovaSQLite.execute(db, query, []).then(function (res) {
+            console.log("Receipt_Files Table Created");
+        }, function (err) {
+            console.error(err);
+        });
+        
         $state.go('main.login');
     });
 });

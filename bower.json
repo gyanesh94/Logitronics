@@ -5,5 +5,11 @@
     "ionic": "driftyco/ionic-bower#1.0.1",
     "ionic-service-core": "~0.1.7",
     "ionic-service-deploy": "~0.1.0"
+  },
+  "resolutions": {
+    "angular": "1.4.3",
+    "angular-animate": "1.4.3",
+    "angular-sanitize": "1.4.3",
+    "ionic": "1.2.1"
   }
 }

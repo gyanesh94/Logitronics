@@ -31,13 +31,13 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         // Sqlite DB Check
         var db = $cordovaSQLite.openDB("my.db");
 
-        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INTEGER PRIMARY KEY, METADATA TEXT, CHECK INTEGER DEFAULT 0)";
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INTEGER PRIMARY KEY, METADATA TEXT, UPLOADED INTEGER DEFAULT 0)";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Receipt_Data Table Created");
         }, function (err) {
             console.error(err);
         });
-        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT, PARENT_ID INTEGER, CHECK INTEGER DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT, PARENT_ID INTEGER, UPLOADED INTEGER DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Receipt_Files Table Created");
         }, function (err) {
