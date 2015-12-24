@@ -19,6 +19,15 @@
                     {{'LOG_OUT' | translate}}
                 </ion-item>
                 <br>
+
+                <div class="item item-divider">
+                    Data To Be Uploaded
+                    <span ng-bind="upload_data.sync_total"></span>
+                </div>
+                <button class="button button-stable button-block button-pulse" ng-disabled="upload_data.button_disable" ng-click="upload_data.upload(upload_data.sync_total)">
+                    Upload
+                </button>
+
                 <br>
                 <div class="item item-divider">
                     Select Language

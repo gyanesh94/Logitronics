@@ -1,4 +1,4 @@
-ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, $cordovaSQLite, get_stock_owner, create_new_payment_receipt, track_event, login_sid, get_payment_db) {
+ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope, $state, $cordovaToast, $cordovaSQLite, get_stock_owner, create_new_payment_receipt, track_event, login_sid) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -60,14 +60,12 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
         };
 
         var query = "INSERT INTO RECEIPT_DATA (ID, METADATA, VOUCHER_TYPE) VALUES(?, ?, 'PR')";
-        $cordovaSQLite.execute(db, query, [final_data.id, final_data]).then(function (res) {
+        $cordovaSQLite.execute(db, query, [final_data.id, JSON.stringify(final_data)]).then(function (res) {
             $scope.new_payment_receipt_search.confirm_disable = false;
             delete $scope.new_payment_receipt;
             $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
             console.log("PR Saved to DB");
-            get_payment_db.get_data();
-            
-            
+            $rootScope.$emit('receipt_to_db', { message: "Inc" });
             $state.transitionTo('main.select_receipt');
         }, function (err) {
             $scope.new_payment_receipt_search.confirm_disable = false;
@@ -75,7 +73,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
             console.log("PR Error");
             console.error(err);
             var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-            $cordovaSQLite.execute(db, query, ["PR Creation", err]);
+            $cordovaSQLite.execute(db, query, ["PR Adding to DB", JSON.stringify(err)]);
         });
     };
 

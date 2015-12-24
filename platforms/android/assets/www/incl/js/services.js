@@ -31,10 +31,8 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                 }
                 if (config.url.indexOf('?') == -1) {
                     config.url = config.url + '?' + sid;
-                    console.log(config);
                 } else {
                     config.url = config.url + '&' + sid;
-                    console.log(config);
                 }
             }
             return config;
@@ -155,7 +153,7 @@ ionic_app.service('get_stock_owner', ['$http', '$q', 'app_settings', function ($
 ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
         var snd = {
-            data: JSON.stringify(data)
+            data: data
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
     };
@@ -191,29 +189,6 @@ ionic_app.service('send_image', ['$http', 'app_settings', function ($http, app_s
         return $http.post(app_settings.server_base_url, $.param(snd));
     };
 }]);
-
-
-// Get Payment Receipt Detail form DB
-ionic_app.service('get_payment_db', ['$cordovaSQLite', function ($cordovaSQLite) {
-    this.get_data = function () {
-        $cordovaSQLite.execute(db, 'SELECT * FROM RECEIPT_DATA WHERE UPLOADED = 0 AND VOUCHER_TYPE = "PR"')
-            .then(
-                function (result) {
-                    if (result.rows.length > 0) {
-                        var len = result.rows.length;
-                        for (i = 0; i < len; i++) {
-                            console.log(result.rows.item(i));
-                        }
-                    }
-                },
-                function (error) {
-                    $scope.statusMessage = "Error on loading: " + error.message;
-                }
-            );
-    }
-}]);
-
-
 
 
 ionic_app.service('getFeedMockAccount', ['$http', '$q', function ($http, $q) {

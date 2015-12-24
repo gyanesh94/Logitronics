@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, switch_preffered_language, app_settings, login_sid, track_event) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, create_new_payment_receipt) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -57,6 +57,76 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             $cordovaToast.show("Update in Progress... ", 'short', 'bottom');
         });
     };
+
+
+    // Upload Data
+    var me = this;
+    me.data_temp_receipt = null;
+
+    $scope.upload_data = {};
+    $scope.upload_data.sync_total = 0;
+    $scope.upload_data.button_disable = false;
+
+    me.query_update = function () {
+        $scope.upload_data.sync_total = 0;
+        var query = 'SELECT * FROM RECEIPT_DATA WHERE UPLOADED = 0 ORDER BY VOUCHER_TYPE DESC, ID DESC';
+        $cordovaSQLite.execute(db, query).then(function (result) {
+            me.data_temp_receipt = result;
+            $scope.upload_data.sync_total = $scope.upload_data.sync_total + me.data_temp_receipt.rows.length;
+        }, function (err) {
+            $cordovaToast.show("Error in PR Fetch", 'short', 'bottom');
+            console.error(err);
+            me.data_temp_receipt = null;
+        });
+    };
+
+    me.query_update();
+
+    $rootScope.$on("receipt_to_db", function (event, args) {
+        me.query_update();
+    });
+
+    $scope.upload_data.upload = function (count) {
+        $scope.upload_data.button_disable = true;
+        if (count > 0) {
+            count = count - 1;
+            if (me.data_temp_receipt.rows.item(count).VOUCHER_TYPE == 'PR') {
+                create_new_payment_receipt.create_feed(me.data_temp_receipt.rows.item(count).METADATA)
+                    .success(function (data) {
+                        var tmp_id = me.data_temp_receipt.rows.item(count).ID;
+                        query = "UPDATE RECEIPT_DATA SET UPLOADED = 1 WHERE ID = " + tmp_id;
+                        $cordovaSQLite.execute(db, query).then(function (res) {
+                            console.log("PR Success");
+                            $scope.upload_data.upload(count);
+                        }, function (err) {
+                            console.error(err);
+                        });
+                    })
+                    .error(function (data) {
+                        var message;
+                        if (data._server_messages) {
+                            message = JSON.parse(data._server_messages);
+                            message = message[0];
+                        } else {
+                            message = "Server Error";
+                        }
+                        $cordovaToast.show(message, 'short', 'bottom');
+                        track_event.track('Payment Receipt', "Error ", message + " " + login_sid.name);
+                        var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
+                        $cordovaSQLite.execute(db, query, ["Creating PR", JSON.stringify(message)]);
+                        $scope.upload_data.upload(count);
+                    });
+            }
+        }
+        if (count == 0) {
+            $scope.upload_data.button_disable = false;
+            me.query_update();
+        }
+    };
+
+
+
+
 
     // Check Ionic Deploy for new code
     $scope.checkForUpdates = function () {

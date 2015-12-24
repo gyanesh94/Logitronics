@@ -52,7 +52,6 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
             console.error(err);
         });
         
-        
         $state.go('main.login');
     });
 });
