@@ -74,17 +74,16 @@ ionic_app.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
 });
 
-
-
 // Login Authentication
 ionic_app.service('login_authentication', ['$http', 'app_settings', function ($http, app_settings) {
     this.login_authenticate = function (usr, pwd) {
         var data = {
+            cmd: 'login',
             usr: usr,
             pwd: pwd
         };
-        var url = app_settings.server_base_url + '/api/method/login?' + $.param(data);
-        return $http.post(url);
+        var url = app_settings.server_base_url + '/api/method/login';
+        return $http.post(url, $.param(data));
     };
 }]);
 
@@ -192,6 +191,29 @@ ionic_app.service('send_image', ['$http', 'app_settings', function ($http, app_s
         return $http.post(app_settings.server_base_url, $.param(snd));
     };
 }]);
+
+
+// Get Payment Receipt Detail form DB
+ionic_app.service('get_payment_db', ['$cordovaSQLite', function ($cordovaSQLite) {
+    this.get_data = function () {
+        $cordovaSQLite.execute(db, 'SELECT * FROM RECEIPT_DATA WHERE UPLOADED = 0 AND VOUCHER_TYPE = "PR"')
+            .then(
+                function (result) {
+                    if (result.rows.length > 0) {
+                        var len = result.rows.length;
+                        for (i = 0; i < len; i++) {
+                            console.log(result.rows.item(i));
+                        }
+                    }
+                },
+                function (error) {
+                    $scope.statusMessage = "Error on loading: " + error.message;
+                }
+            );
+    }
+}]);
+
+
 
 
 ionic_app.service('getFeedMockAccount', ['$http', '$q', function ($http, $q) {

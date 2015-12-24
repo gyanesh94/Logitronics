@@ -1,4 +1,4 @@
-ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, get_stock_owner, create_new_payment_receipt, track_event, login_sid) {
+ionic_app.controller('payment_receipt_controller', function ($scope, $state, $cordovaToast, $cordovaSQLite, get_stock_owner, create_new_payment_receipt, track_event, login_sid, get_payment_db) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -58,26 +58,25 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $state, $co
             fiscal_year: "2015-16",
             item: $scope.new_payment_receipt.item
         };
-        create_new_payment_receipt.create_feed(final_data)
-            .success(function (data) {
-                $scope.new_payment_receipt_search.confirm_disable = false;
-                delete $scope.new_payment_receipt;
-                $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
-                track_event.track('Payment Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
-                $state.transitionTo('main.select_receipt');
-            })
-            .error(function (data) {
-                $scope.new_payment_receipt_search.confirm_disable = false;
-                if (data._server_messages) {
-                    message = JSON.parse(data._server_messages);
-                    $cordovaToast.show(message[0], 'short', 'bottom');
-                    track_event.track('Payment Receipt', "Error", message[0] + " " + login_sid.name);
-                } else {
-                    message = "Server Error";
-                    $cordovaToast.show(message, 'short', 'bottom');
-                    track_event.track('Payment Receipt', "Error", message + " " + login_sid.name);
-                }
-            });
+
+        var query = "INSERT INTO RECEIPT_DATA (ID, METADATA, VOUCHER_TYPE) VALUES(?, ?, 'PR')";
+        $cordovaSQLite.execute(db, query, [final_data.id, final_data]).then(function (res) {
+            $scope.new_payment_receipt_search.confirm_disable = false;
+            delete $scope.new_payment_receipt;
+            $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
+            console.log("PR Saved to DB");
+            get_payment_db.get_data();
+            
+            
+            $state.transitionTo('main.select_receipt');
+        }, function (err) {
+            $scope.new_payment_receipt_search.confirm_disable = false;
+            $cordovaToast.show("We are unable to save this voucher please contact admin", 'short', 'bottom');
+            console.log("PR Error");
+            console.error(err);
+            var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, ["PR Creation", err]);
+        });
     };
 
     $scope.payment_receipt_next = function () {

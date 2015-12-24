@@ -7,6 +7,8 @@
 
 var ionic_app = angular.module('home', ['ionic', 'ngMaterial', 'ionic.service.core', 'ionic.service.deploy', 'ion-autocomplete', 'pascalprecht.translate', 'ngCordova']);
 
+var db = null;
+
 ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -29,9 +31,9 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
 
 
         // Sqlite DB Check
-        var db = $cordovaSQLite.openDB("my.db");
+        db = $cordovaSQLite.openDB("my.db");
 
-        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INTEGER PRIMARY KEY, METADATA TEXT, UPLOADED INTEGER DEFAULT 0)";
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_DATA (ID INTEGER PRIMARY KEY, METADATA TEXT, VOUCHER_TYPE TEXT, UPLOADED INTEGER DEFAULT 0)";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Receipt_Data Table Created");
         }, function (err) {
@@ -43,6 +45,13 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         }, function (err) {
             console.error(err);
         });
+        var query = "CREATE TABLE IF NOT EXISTS ERROR_LOG (NAME TEXT, DESCRIPTION TEXT)";
+        $cordovaSQLite.execute(db, query, []).then(function (res) {
+            console.log("Error_Log Table Created");
+        }, function (err) {
+            console.error(err);
+        });
+        
         
         $state.go('main.login');
     });

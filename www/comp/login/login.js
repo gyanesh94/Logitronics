@@ -48,10 +48,10 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                 if (data) {
                     if (data.message) {
                         $cordovaToast.show(data.message, 'short', 'bottom');
-                        track_event.track('Login', 'Failure', data.message + " " + scope.login.username);
+                        track_event.track('Login', 'Failure', data.message + " " + $scope.login.username);
                     }
                 }
-                track_event.track('Login', 'Login Failure', scope.login.username);
+                track_event.track('Login', 'Login Failure', $scope.login.username);
             });
     };
 });
