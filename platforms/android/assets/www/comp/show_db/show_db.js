@@ -1,5 +1,9 @@
 ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQLite, $cordovaToast) {
 
+    $scope.db_to_home = function () {
+        $state.transitionTo('main.select_receipt');
+    };
+
     $scope.db_data = {};
     $scope.db_data.GRS = [];
     $scope.db_data.PRS = [];
@@ -24,7 +28,6 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
                 $scope.db_data.GRS.push(temp);
             }
         }
-
     }, function (err) {
         $cordovaToast.show("Error in Receipt Data Fetch", 'short', 'bottom');
         console.error(err);

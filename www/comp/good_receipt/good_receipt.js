@@ -59,7 +59,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             $cordovaFile.readAsDataURL(path, file).then(function (success) {
                 $scope.new_good_receipt_search.customer_image = success;
             }, function (error) {
-                console.log(error);
+                console.error(error);
             });
         });
     };
@@ -143,7 +143,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 $scope.new_good_receipt_search.take_signature_next_disable = false;
                 $cordovaToast.show("Camera Not Working", 'short', 'bottom');
                 track_event.track('Camera', "Error", "Camera Not Working " + login_sid.name);
-                console.log(err);
+                console.error(err);
             });
         }, false);
     };
@@ -156,12 +156,14 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 .then(function (success) {
                     me.read_data_url(cordova.file.dataDirectory, file_name);
                     $scope.new_good_receipt_search.take_signature_next_disable = false;
-                    $state.transitionTo('main.good_receipt.take_picture_location');
                     me.geo_location();
+                    $state.transitionTo('main.good_receipt.take_picture_location');
                 }, function (error) {
                     $scope.new_good_receipt_search.take_signature_next_disable = false;
                     $cordovaToast.show("File Not Moved", 'short', 'bottom');
-                    console.log(error);
+                    console.error(error);
+                    var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
+                    $cordovaSQLite.execute(db, query, ["File Error", err]);
                 });
         });
     };
@@ -182,7 +184,9 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 }, function (err) {
                     $cordovaToast.show("Location not taken", 'short', 'bottom');
                     track_event.track('Geolocation', "Error", "Location not taken " + login_sid.name);
-                    console.log(err);
+                    console.error(err);
+                    var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
+                    $cordovaSQLite.execute(db, query, ["GPRS Error", err]);
                 });
         });
     };

@@ -73,7 +73,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
             console.log("PR Error");
             console.error(err);
             var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-            $cordovaSQLite.execute(db, query, ["PR Adding to DB", JSON.stringify(err)]);
+            $cordovaSQLite.execute(db, query, ["PR Adding to DB", err]);
         });
     };
 

@@ -96,7 +96,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                     });
                             }, function (error) {
                                 console.log("Check File Error");
-                                console.log(error);
+                                console.error(error);
                                 promise.resolve();
                             });
                     });
@@ -120,7 +120,7 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                         $state.go('main.select_receipt');
                                     }, function (error) {
                                         console.log("Read As Text Error");
-                                        console.log(error);
+                                        console.error(error);
                                         promise.resolve();
                                     });
                             }, function (error) {
