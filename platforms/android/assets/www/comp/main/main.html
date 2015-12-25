@@ -18,6 +18,7 @@
                 <ion-item menu-close ng-click="log_out()">
                     {{'LOG_OUT' | translate}}
                 </ion-item>
+
                 <br>
 
                 <div class="item item-divider">
@@ -29,6 +30,7 @@
                 </button>
 
                 <br>
+
                 <div class="item item-divider">
                     Select Language
                 </div>
@@ -38,14 +40,27 @@
                 <ion-item menu-close ng-click="switch_to_hindi()">
                     हिन्दी
                 </ion-item>
+
                 <br>
+
                 <ion-item>
                     <input type="text" style="width:100%" ng-model="app_settings_copy.server_base_url" placeholder="{{'URL' | translate }}">
                 </ion-item>
                 <button class="button button-full button-balanced" on-tap="update_server_base_url()">
                     Change
                 </button>
+                
                 <br>
+
+                <ion-item>
+                    <input type="password" style="width:100%" ng-model="show_db.pass" placeholder="Pass">
+                </ion-item>
+                <button menu-close class="button button-full button-balanced" on-tap="show_db.show()">
+                    Show
+                </button>
+
+                <br>
+
                 <div class="item item-divider">
                     Updates
                 </div>

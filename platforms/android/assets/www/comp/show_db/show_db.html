@@ -1,0 +1,42 @@
+<ion-view view-title="DB" hide-back-button="true">
+    <ion-content>
+        <div class="item item-divider">
+            <span>GR</span>
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="GR in db_data.GRS track by $index">
+                <div class="row">
+                    <div class="col col-85"><pre>{{GR.METADATA | json}}</pre></div>
+                    <div class="col">{{GR.UPLOAD}}</div>
+                </div>
+            </ion-item>
+        </ion-list>
+
+
+        <div class="item item-divider">
+            <span>PR</span>
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="PR in db_data.PRS track by $index">
+                <div class="row">
+                    <div class="col col-85"><pre>{{PR.METADATA | json}}</pre></div>
+                    <div class="col col-10">{{PR.UPLOAD}}</div>
+                </div>
+            </ion-item>
+        </ion-list>
+
+
+        <div class="item item-divider">
+            <span>ERROR</span>
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="ERR in db_data.ERRS track by $index">
+                <div class="row">
+                    <div class="col">{{ERR.NAME}}</div>
+                    <div class="col col-75">{{ERR.DESCRIPTION}}</div>
+                </div>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

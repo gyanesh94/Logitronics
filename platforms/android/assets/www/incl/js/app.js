@@ -51,7 +51,7 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         }, function (err) {
             console.error(err);
         });
-        
+
         $state.go('main.login');
     });
 });
@@ -130,6 +130,15 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                             });
                     });
                     return promise.promise;
+                }
+            }
+        })
+        .state('main.show_db', {
+            url: '/show_db',
+            views: {
+                'content_view': {
+                    templateUrl: 'comp/show_db/show_db.html',
+                    controller: 'show_db_controller'
                 }
             }
         })
