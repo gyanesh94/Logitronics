@@ -1,0 +1,28 @@
+<ion-view view-title="{{'GOOD_RECEIPT' | translate}}">
+    <ion-header-bar class="bar bar-subheader bar-stable">
+        <h2 class="title">Final</h2>
+    </ion-header-bar>
+    <ion-content>
+
+        <div class="item item-input">
+            <span class="input-label">
+                    {{'VOUCHER_ID' | translate}}: 
+                    <span ng-bind="new_good_receipt.voucher_id"></span>
+            </span>
+        </div>
+
+        <div>
+            <br>
+            <img ng-src="{{new_good_receipt.signature}}" id="final_image" />
+            <script>
+                var img_tag = document.getElementById("final_image");
+                img_tag.width = window.innerWidth;
+                img_tag.height = window.innerHeight - 170;
+            </script>
+        </div>
+
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class='button button-balanced pull-right' style="padding: 0 30px;" ng-click='home()'>Home</button>   
+    </ion-footer-bar>
+</ion-view>

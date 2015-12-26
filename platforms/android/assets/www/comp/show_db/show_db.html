@@ -1,8 +1,5 @@
 <ion-view view-title="DB" hide-back-button="true">
     <ion-content>
-        <button class="button button-full button-balanced" on-tap="db_to_home()">
-            Home
-        </button>
 
         <div class="item item-divider">
             <span>GR</span>
@@ -10,12 +7,27 @@
         <ion-list>
             <ion-item ng-repeat="GR in db_data.GRS track by $index">
                 <div class="row">
-                    <div class="col col-85"><pre>{{GR.METADATA | json}}</pre></div>
-                    <div class="col">{{GR.UPLOAD}}</div>
+                    <div class="col col-90"><pre>{{GR.METADATA | json}}</pre></div>
+                    <div class="col col-10">{{GR.UPLOAD}}</div>
                 </div>
             </ion-item>
         </ion-list>
-
+        
+        <br>
+        
+         <div class="item item-divider">
+            <span>GR Files</span>
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="FILE in db_data.FILES track by $index">
+                <div class="row">
+                    <div class="col col-80"><pre>{{FILE.FILE_NAME}}</pre></div>
+                    <div class="col col-20">{{FILE.UPLOAD}}</div>
+                </div>
+            </ion-item>
+        </ion-list>
+       
+        <br>
 
         <div class="item item-divider">
             <span>PR</span>
@@ -23,12 +35,13 @@
         <ion-list>
             <ion-item ng-repeat="PR in db_data.PRS track by $index">
                 <div class="row">
-                    <div class="col col-85"><pre>{{PR.METADATA | json}}</pre></div>
+                    <div class="col col-90"><pre>{{PR.METADATA | json}}</pre></div>
                     <div class="col col-10">{{PR.UPLOAD}}</div>
                 </div>
             </ion-item>
         </ion-list>
 
+        <br>
 
         <div class="item item-divider">
             <span>ERROR</span>
@@ -36,11 +49,14 @@
         <ion-list>
             <ion-item ng-repeat="ERR in db_data.ERRS track by $index">
                 <div class="row">
-                    <div class="col">{{ERR.NAME}}</div>
-                    <div class="col col-75">{{ERR.DESCRIPTION}}</div>
+                    <div class="col col-30"><pre>{{ERR.NAME}}</pre></div>
+                    <div class="col col-70"><pre>{{ERR.DESCRIPTION | json}}</pre></div>
                 </div>
             </ion-item>
         </ion-list>
 
     </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class='button button-balanced pull-right' style="padding: 0 30px;" ng-click='db_to_home()'>Home</button>   
+    </ion-footer-bar>
 </ion-view>

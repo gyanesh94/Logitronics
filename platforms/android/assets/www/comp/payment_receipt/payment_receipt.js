@@ -57,25 +57,65 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
             posting_time: now_time,
             fiscal_year: "2015-16",
             item: $scope.new_payment_receipt.item
+
         };
 
-        var query = "INSERT INTO RECEIPT_DATA (ID, METADATA, VOUCHER_TYPE) VALUES(?, ?, 'PR')";
-        $cordovaSQLite.execute(db, query, [final_data.id, JSON.stringify(final_data)]).then(function (res) {
-            $scope.new_payment_receipt_search.confirm_disable = false;
-            delete $scope.new_payment_receipt;
-            $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
-            console.log("PR Saved to DB");
-            $rootScope.$emit('receipt_to_db', { message: "Inc" });
-            $state.transitionTo('main.select_receipt');
-        }, function (err) {
-            $scope.new_payment_receipt_search.confirm_disable = false;
-            $cordovaToast.show("We are unable to save this voucher please contact admin", 'short', 'bottom');
-            console.log("PR Error");
-            console.error(err);
-            var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-            $cordovaSQLite.execute(db, query, ["PR Adding to DB", JSON.stringify(err)]);
-        });
+
+
+        //        var query = "INSERT INTO RECEIPT_DATA (ID, METADATA, VOUCHER_TYPE, UPLOADED) VALUES(?, ?, 'PR', 1)";
+        //        $cordovaSQLite.execute(db, query, [final_data.id, JSON.stringify(final_data)]).then(function (res) {
+        //            $scope.new_payment_receipt_search.confirm_disable = false;
+        //            delete $scope.new_payment_receipt;
+        //            $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
+        //            console.log("PR Saved to DB");
+        //            $rootScope.$emit('receipt_to_db', {
+        //                message: "Inc"
+        //            });
+        //            $state.transitionTo('main.select_receipt');
+        //                }, function (error) {
+        //        if (typeof error == 'object')
+        //                    error = JSON.stringify(error);
+        //                    $scope.new_payment_receipt_search.confirm_disable = false;
+        //                    $cordovaToast.show("We are unable to save this voucher please contact admin", 'short', 'bottom');
+        //                    console.log("PR Error");
+        //                    console.error(error);
+        //                    var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+        //                    $cordovaSQLite.execute(db, query, ["PR Adding to DB", error]);
+        //                });
+        //            };
+        //
+        //
+        //    create_new_payment_receipt.create_feed(me.data_temp_receipt.rows.item(count).METADATA)
+        //        .success(function (data) {
+        //            var tmp_id = me.data_temp_receipt.rows.item(count).ID;
+        //            query = "UPDATE RECEIPT_DATA SET UPLOADED = 1 WHERE ID = " + tmp_id;
+        //            $cordovaSQLite.execute(db, query).then(function (res) {
+        //                console.log("PR Success");
+        //                $scope.upload_data.upload(count);
+        //            }, function (err) {
+        //                console.error(err);
+        //            });
+        //        })
+        //                .error(function (data) {
+        //                    var error;
+        //                    if (data._server_messages) {
+        //                        error = JSON.parse(data._server_messages);
+        //                        error = error[0];
+        //                    } else {
+        //                        error = "Server Error";
+        //                    }
+        //                    if (typeof error == 'object')
+        //                    error = JSON.stringify(error);
+        //                    $cordovaToast.show(error, 'short', 'bottom');
+        //                    track_event.track('Payment Receipt', "Error ", error + " " + login_sid.name);
+        //                    var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+        //                    $cordovaSQLite.execute(db, query, ["Creating PR", error]);
+        //                    $scope.upload_data.upload(count);
+        //        });
+        //
+
     };
+
 
     $scope.payment_receipt_next = function () {
         $state.transitionTo('main.payment_receipt.payment_receipt_acknowledgement');

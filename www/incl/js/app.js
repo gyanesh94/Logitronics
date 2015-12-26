@@ -48,8 +48,8 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         var query = "CREATE TABLE IF NOT EXISTS ERROR_LOG (NAME TEXT, DESCRIPTION TEXT)";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Error_Log Table Created");
-        }, function (err) {
-            console.error(err);
+        }, function (error) {
+            console.error(error);
         });
 
         $state.go('main.login');
@@ -219,10 +219,18 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
             }
         })
         .state('main.good_receipt.take_picture_location', {
-            url: '/take_signature',
+            url: '/take_picture_location',
             views: {
                 'good_receipt_content_view': {
                     templateUrl: 'comp/good_receipt/form/take_picture_location.html'
+                }
+            }
+        })
+        .state('main.good_receipt.final', {
+            url: '/final',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/final.html'
                 }
             }
         })

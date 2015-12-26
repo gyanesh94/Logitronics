@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, create_new_payment_receipt) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, send_image) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -61,84 +61,99 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
 
     // Upload Data
     var me = this;
-    me.data_temp_receipt = null;
+    me.data_temp_files = null;
 
     $scope.upload_data = {};
     $scope.upload_data.sync_total = 0;
     $scope.upload_data.button_disable = false;
 
-    me.query_update = function () {
+    me.total_update = function () {
         $scope.upload_data.sync_total = 0;
-        var query = 'SELECT * FROM RECEIPT_DATA WHERE UPLOADED = 0 ORDER BY VOUCHER_TYPE DESC, ID DESC';
+        var query = 'SELECT * FROM RECEIPT_FILES WHERE UPLOADED = 0';
         $cordovaSQLite.execute(db, query).then(function (result) {
-            me.data_temp_receipt = result;
-            $scope.upload_data.sync_total = $scope.upload_data.sync_total + me.data_temp_receipt.rows.length;
+            me.data_temp_files = result;
+            $scope.upload_data.sync_total = me.data_temp_files.rows.length;
         }, function (err) {
-            $cordovaToast.show("Error in PR Fetch", 'short', 'bottom');
+            $cordovaToast.show("Error in Files DB Fetch", 'short', 'bottom');
             console.error(err);
-            me.data_temp_receipt = null;
+            me.data_temp_files = null;
         });
     };
 
-    me.query_update();
+    me.total_update();
 
     $rootScope.$on("receipt_to_db", function (event, args) {
-        me.query_update();
+        me.total_update();
     });
+
+
+    me.send_image_file = function (t_name, t_path, count, t_pid, t_img_suf, t_type) {
+        $cordovaFile.readAsText(t_path, t_name).then(function (t_data) {
+            send_image.send(t_pid, t_data, 'gr_' + t_pid + t_img_suf, 'Goods Receipt', t_type)
+                .success(function (data) {
+                    var query = "UPDATE RECEIPT_FILES SET UPLOADED = 1 WHERE FILE_NAME = " + t_name;
+                    $cordovaSQLite.execute(db, query);
+                    $scope.upload_data.upload(count);
+                })
+                .error(function (error) {
+                    if (typeof error == 'object')
+                        error = JSON.stringify(error);
+                    $cordovaToast.show(error, 'short', 'bottom');
+                    track_event.track('File Not Uploaded ' + t_name, "Error ", error + " " + login_sid.name);
+                    var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                    $cordovaSQLite.execute(db, query, ["File Not Uploaded " + t_name, error]);
+                    $scope.upload_data.upload(count);
+                });
+        }, function (error) {
+            if (typeof error == 'object')
+                error = JSON.stringify(error);
+            $cordovaToast.show(error, 'short', 'bottom');
+            track_event.track('File Not Read ' + t_name, "Error ", error + " " + login_sid.name);
+            var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, ["File Not Read " + t_name, error]);
+            $scope.upload_data.upload(count);
+        });
+    };
+
 
     $scope.upload_data.upload = function (count) {
         $scope.upload_data.button_disable = true;
         if (count > 0) {
             count = count - 1;
-            if (me.data_temp_receipt.rows.item(count).VOUCHER_TYPE == 'PR') {
-                create_new_payment_receipt.create_feed(me.data_temp_receipt.rows.item(count).METADATA)
-                    .success(function (data) {
-                        var tmp_id = me.data_temp_receipt.rows.item(count).ID;
-                        query = "UPDATE RECEIPT_DATA SET UPLOADED = 1 WHERE ID = " + tmp_id;
-                        $cordovaSQLite.execute(db, query).then(function (res) {
-                            console.log("PR Success");
-                            $scope.upload_data.upload(count);
-                        }, function (err) {
-                            console.error(err);
-                        });
-                    })
-                    .error(function (data) {
-                        var message;
-                        if (data._server_messages) {
-                            message = JSON.parse(data._server_messages);
-                            message = message[0];
-                        } else {
-                            message = "Server Error";
-                        }
-                        $cordovaToast.show(message, 'short', 'bottom');
-                        track_event.track('Payment Receipt', "Error ", message + " " + login_sid.name);
-                        var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-                        $cordovaSQLite.execute(db, query, ["Creating PR", JSON.stringify(message)]);
-                        $scope.upload_data.upload(count);
-                    });
+            t_name = me.data_temp_files.rows.item(count).FILE_NAME;
+            t_pid = me.data_temp_files.rows.item(count).PARENT_ID;
+            t_path = cordova.file.dataDirectory + "/proof_img/";
+
+            if (t_name.indexOf("_customer_image.txt") != -1) {
+                me.send_image_file(t_name, t_path, count, t_pid, '_customer_image.jpg', 'customer_image');
+            } else {
+                me.send_image_file(t_name, t_path, count, t_pid, '_signature.txt', 'signature');
             }
+
         }
+
         if (count == 0) {
             $scope.upload_data.button_disable = false;
-            me.query_update();
+            me.total_update();
         }
     };
 
-    
+
 
     // Show DB
     $scope.show_db = {};
     $scope.show_db.pass = '';
-    $scope.show_db.show = function (){
-        if ($scope.show_db.pass == 'error'){
-            $scope.show_db.pass = "";
-            $state.transitionTo('main.show_db');
-        }
-        else{
-            $cordovaToast.show("Wrong Pass", 'short', 'bottom');
-        }
+    $scope.show_db.show = function () {
+        //        if ($scope.show_db.pass == 'error') {
+        //            $scope.show_db.pass = "";
+        //            $state.transitionTo('main.show_db');
+        //        } else {
+        //            $cordovaToast.show("Wrong Pass", 'short', 'bottom');
+        //        }
+        $rootScope.$broadcast('db_update', {});
+        $state.transitionTo('main.show_db');
     };
-    
+
 
     // Check Ionic Deploy for new code
     $scope.checkForUpdates = function () {

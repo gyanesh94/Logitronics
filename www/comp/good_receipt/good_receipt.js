@@ -1,4 +1,4 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid) {
+ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $ionicHistory, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, $cordovaSQLite, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -15,9 +15,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         vehicle_number: '',
         customer_document_id: '',
         voucher_id: '',
-        customer_image: {},
+        customer_image: '',
         loc_lat: '',
-        loc_long: ''
+        loc_long: '',
+        signature: '',
+        process_id: ''
     };
 
     $scope.new_good_receipt_search_object = {
@@ -34,7 +36,6 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         item_images_empty: images_link_empty,
         item_images_filled: images_link_filled,
         confirm_disable: false,
-        customer_image: '',
         take_signature_button_disable: false,
         take_signature_next_disable: false
     };
@@ -57,11 +58,88 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
     me.read_data_url = function (path, file) {
         document.addEventListener('deviceready', function () {
             $cordovaFile.readAsDataURL(path, file).then(function (success) {
-                $scope.new_good_receipt_search.customer_image = success;
+                $scope.new_good_receipt.customer_image = success;
+                $cordovaCamera.cleanup().then(); // only for FILE_URI
+                $cordovaFile.removeFile(path, file);
+                $scope.new_good_receipt_search.take_signature_next_disable = false;
+                $state.transitionTo('main.good_receipt.take_picture_location');
             }, function (error) {
+                if (typeof error == 'object')
+                    error = JSON.stringify(error);
                 console.error(error);
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Image jpg to Base64 Error", error]);
+                $cordovaCamera.cleanup().then(); // only for FILE_URI
+                $scope.new_good_receipt_search.take_signature_next_disable = false;
+                $state.transitionTo('main.good_receipt.take_picture_location');
             });
         });
+    };
+
+    // Check Dir Exists for saving images
+    $scope.check_dir_exist = function (path, dirname) {
+        return $cordovaFile.checkDir(path, dirname);
+    };
+
+
+    // Save Image Base64 to File
+    $scope.save_img_to_file = function () {
+        path = cordova.file.dataDirectory + "/proof_img/";
+        file_name = 'gr_' + $scope.new_good_receipt.voucher_id;
+        $cordovaFile.writeFile(path, file_name + '_customer_image.txt', $scope.new_good_receipt.customer_image, true)
+            .then(function (success) {
+                send_image.send($scope.new_good_receipt.voucher_id, $scope.new_good_receipt.customer_image, 'gr_' + $scope.new_good_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
+                    .success(function (data) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.new_good_receipt.voucher_id]);
+                    })
+                    .error(function (error) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.new_good_receipt.voucher_id]);
+                    });
+            }, function (error) {
+                send_image.send($scope.new_good_receipt.voucher_id, $scope.new_good_receipt.customer_image, 'gr_' + $scope.new_good_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
+                    .success(function (data) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Customer Image ' + $scope.new_good_receipt.voucher_id, $scope.new_good_receipt.voucher_id]);
+                    });
+                if (typeof error == 'object')
+                    error = JSON.stringify(error);
+                console.log("1");
+                console.error(error);
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Customer Image Not Stored " + $scope.new_good_receipt.voucher_id, error]);
+                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+            });
+
+        $cordovaFile.writeFile(path, file_name + '_signature.txt', canvas_signature.signature, true)
+            .then(function (success) {
+                send_image.send($scope.new_good_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.new_good_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
+                    .success(function (data) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+                        $cordovaSQLite.execute(db, query, [file_name + '_signature.txt', $scope.new_good_receipt.voucher_id]);
+                    })
+                    .error(function (error) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+                        $cordovaSQLite.execute(db, query, [file_name + '_signature.txt', $scope.new_good_receipt.voucher_id]);
+                    });
+            }, function (error) {
+                send_image.send($scope.new_good_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.new_good_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
+                    .success(function (data) {
+                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Signature ' + $scope.new_good_receipt.voucher_id, $scope.new_good_receipt.voucher_id]);
+                    });
+                if (typeof error == 'object')
+                    error = JSON.stringify(error);
+                console.log("2");
+                console.error(error);
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Customer Signature Not Stored " + $scope.new_good_receipt.voucher_id, error]);
+                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+            });
+
+        $ionicHistory.clearHistory();
+        $state.transitionTo('main.good_receipt.final');
     };
 
 
@@ -85,35 +163,56 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             goods_receipt_number: voucher_id,
             customer_document_id: $scope.new_good_receipt.customer_document_id,
             location_latitude: $scope.new_good_receipt.loc_lat,
-            location_longitude: $scope.new_good_receipt.loc_long
+            location_longitude: $scope.new_good_receipt.loc_long,
+            process_id: $scope.new_good_receipt.process_id
         };
+
+        $scope.new_good_receipt.signature = canvas_signature.signature;
+
         create_new_good_receipt.create_feed(final_data)
             .success(function (data) {
+                $scope.new_good_receipt.voucher_id = data.data.name;
                 $scope.new_good_receipt_search.confirm_disable = false;
-                send_image.send(voucher_id, $scope.new_good_receipt_search.customer_image, 'gr_' + voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image').success(function (data) {
-                    $scope.new_good_receipt_search.customer_image = "";
-                    $scope.new_good_receipt.customer_image = {};
-                });
-                send_image.send(voucher_id, canvas_signature.signature, 'gr_' + voucher_id + '_signature.jpg', 'Goods Receipt', 'signature').success(function (data) {});
-                delete $scope.new_good_receipt;
-                $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
-                delete $scope.new_good_receipt_search;
-                $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
-                track_event.track('Goods Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
-                $state.transitionTo('main.select_receipt');
+
+                var query = "INSERT INTO RECEIPT_DATA (ID, METADATA, VOUCHER_TYPE, UPLOADED) VALUES(?, ?, 'GR', 1)";
+                $cordovaSQLite.execute(db, query, [$scope.new_good_receipt.voucher_id, JSON.stringify(final_data)]).then(
+                    function (success) {
+                        $cordovaFile.createDir(cordova.file.dataDirectory, "proof_img", false).then(
+                            function (success) {
+                                console.log("5");
+                                console.error(success);
+                                $scope.save_img_to_file();
+                            },
+                            function (error) {
+                                console.log("3");
+                                if (typeof error == 'object')
+                                    error = JSON.stringify(error);
+                                console.error(error);
+                                $cordovaSQLite.execute(db, query, ["Can't Create Main Image Storage Dir", error]);
+                                $scope.save_img_to_file();
+
+                            });
+                    });
             })
             .error(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
+                error = '';
                 if (data._server_messages) {
-                    message = JSON.parse(data._server_messages);
-                    $cordovaToast.show(message[0], 'short', 'bottom');
-                    track_event.track('Goods Receipt', "Error", message[0] + " " + login_sid.name);
+                    error = JSON.parse(data._server_messages);
+                    error = error[0];
                 } else {
-                    message = "Server Error";
-                    $cordovaToast.show(message, 'short', 'bottom');
-                    track_event.track('Goods Receipt', "Error", message + " " + login_sid.name);
+                    error = "Server Error";
                 }
 
+                if (typeof error == 'object')
+                    error = JSON.stringify(error);
+                $cordovaToast.show(error + " Contact to admin", 'long', 'bottom');
+                track_event.track('Goods Receipt', "Error", error + " " + login_sid.name);
+
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Voucher Not Send", error]);
+
+                console.error(error);
             });
     };
 
@@ -131,41 +230,25 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 cameraDirection: Camera.Direction.FRONT
             };
 
+            me.geo_location();
+
             $cordovaCamera.getPicture(options).then(function (imageURI) {
                 var image_name = imageURI.substring(imageURI.lastIndexOf('/') + 1);
-                $scope.new_good_receipt.customer_image = {
-                    path: cordova.file.dataDirectory,
-                    name: image_name
-                };
-                me.file_move(image_name);
-                $cordovaCamera.cleanup().then(); // only for FILE_URI
-            }, function (err) {
-                $scope.new_good_receipt_search.take_signature_next_disable = false;
-                $cordovaToast.show("Camera Not Working", 'short', 'bottom');
+                var image_path = imageURI.substring(0, imageURI.lastIndexOf('/') + 1);
+                me.read_data_url(image_path, image_name);
+            }, function (error) {
+                if (typeof error == 'object')
+                    error = JSON.stringify(error);
+                $cordovaToast.show("Camera Not Working - " + error, 'short', 'bottom');
                 track_event.track('Camera', "Error", "Camera Not Working " + login_sid.name);
-                console.error(err);
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Camera Error", error]);
+                $scope.new_good_receipt_search.take_signature_next_disable = false;
+                console.error(error);
+                if (error != "Camera cancelled.")
+                    $state.transitionTo('main.good_receipt.take_picture_location');
             });
         }, false);
-    };
-
-
-    // Move File from one location to other
-    me.file_move = function (file_name) {
-        document.addEventListener('deviceready', function () {
-            $cordovaFile.moveFile(cordova.file.externalCacheDirectory, file_name, cordova.file.dataDirectory)
-                .then(function (success) {
-                    me.read_data_url(cordova.file.dataDirectory, file_name);
-                    $scope.new_good_receipt_search.take_signature_next_disable = false;
-                    me.geo_location();
-                    $state.transitionTo('main.good_receipt.take_picture_location');
-                }, function (error) {
-                    $scope.new_good_receipt_search.take_signature_next_disable = false;
-                    $cordovaToast.show("File Not Moved", 'short', 'bottom');
-                    console.error(error);
-                    var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-                    $cordovaSQLite.execute(db, query, ["File Error", err]);
-                });
-        });
     };
 
 
@@ -181,18 +264,38 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 .then(function (position) {
                     $scope.new_good_receipt.loc_lat = position.coords.latitude;
                     $scope.new_good_receipt.loc_long = position.coords.longitude;
-                }, function (err) {
-                    $cordovaToast.show("Location not taken", 'short', 'bottom');
+                }, function (error) {
+                    if (typeof error == 'object')
+                        error = JSON.stringify(error);
                     track_event.track('Geolocation', "Error", "Location not taken " + login_sid.name);
-                    console.error(err);
-                    var query = "INSERT INTO ERROR_LOG VALUES(?, ?)";
-                    $cordovaSQLite.execute(db, query, ["GPRS Error", err]);
+                    console.error(error);
+                    var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                    $cordovaSQLite.execute(db, query, ["GPRS Error", error]);
                 });
         });
     };
 
     $scope.customer_name_next = function () {
-        $state.transitionTo('main.good_receipt.item_delievered_name');
+        f = 1;
+        if (!("value" in $scope.new_good_receipt.customer_name)) {
+            $cordovaToast.show('Enter Customer Name', 'short', 'bottom');
+            f = 0;
+        } else if ($scope.new_good_receipt.voucher_id == '') {
+            $cordovaToast.show('Enter Voucher ID', 'short', 'bottom');
+            f = 0;
+        } else if ($scope.new_good_receipt.vehicle_number == '') {
+            $cordovaToast.show('Enter Vehicle Number', 'short', 'bottom');
+            f = 0;
+        }
+        if (f == 1) {
+            var d = new Date();
+            $scope.new_good_receipt.process_id = $scope.new_good_receipt.customer_name + "#" + d.getTime();
+            $scope.new_good_receipt.item_delievered_name = '';
+            $scope.new_good_receipt.item_delievered_quantity = '';
+            $scope.new_good_receipt.item_received_name = '';
+            $scope.new_good_receipt.item_received_quantity = '';
+            $state.transitionTo('main.good_receipt.item_delievered_name');
+        }
     };
 
     $scope.item_delievered_name_empty_next = function (index) {
@@ -205,12 +308,15 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         $state.transitionTo('main.good_receipt.item_delievered_quantity');
     };
 
-    $scope.item_delievered_name_next = function () {
+    $scope.item_delievered_name_skip = function () {
         $state.transitionTo('main.good_receipt.item_received_name');
     };
 
     $scope.item_delievered_quantity_next = function () {
-        $state.transitionTo('main.good_receipt.item_received_name');
+        if ($scope.new_good_receipt.item_delievered_quantity == '')
+            $cordovaToast.show('Enter Delievered Quantity', 'long', 'center');
+        else
+            $state.transitionTo('main.good_receipt.item_received_name');
     };
 
     $scope.item_received_name_empty_next = function (index) {
@@ -223,12 +329,15 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         $state.transitionTo('main.good_receipt.item_received_quantity');
     };
 
-    $scope.item_received_name_next = function () {
+    $scope.item_received_name_skip = function () {
         $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
     $scope.item_received_quantity_next = function () {
-        $state.transitionTo('main.good_receipt.acknowledgement');
+        if ($scope.new_good_receipt.item_received_quantity == '')
+            $cordovaToast.show('Enter Received Quantity', 'long', 'center');
+        else
+            $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
     $scope.take_signature_button = function () {
@@ -250,12 +359,22 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
     };
 
     $scope.take_new_image = function () {
-        $cordovaFile.removeFile(cordova.file.dataDirectory, $scope.new_good_receipt.customer_image.name);
         me.take_img();
     };
 
     $scope.confirm_good_receipt = function () {
         me.create_good_receipt();
+    };
+
+    $scope.home = function () {
+        $rootScope.$emit('receipt_to_db', {});
+        $rootScope.$emit('signature_canvas_clear', {});
+        delete $scope.new_good_receipt;
+        $scope.new_good_receipt = angular.copy($scope.new_good_receipt_object);
+        delete $scope.new_good_receipt_search;
+        $scope.new_good_receipt_search = angular.copy($scope.new_good_receipt_search_object);
+        track_event.track('Goods Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
+        $state.transitionTo('main.select_receipt');
     };
 });
 
