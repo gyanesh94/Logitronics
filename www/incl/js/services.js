@@ -153,7 +153,7 @@ ionic_app.service('get_stock_owner', ['$http', '$q', 'app_settings', function ($
 ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
         var snd = {
-            data: data
+            data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
     };
@@ -167,6 +167,17 @@ ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function 
             data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Goods Receipt', $.param(snd));
+    };
+}]);
+
+
+// Send Error to Server
+ionic_app.service('send_error_data', ['$http', 'app_settings', function ($http, app_settings) {
+    this.send_data = function (data) {
+        var snd = {
+            data: JSON.stringify(data)
+        };
+        return $http.post(app_settings.server_base_url + '/api/resource/', $.param(snd));
     };
 }]);
 

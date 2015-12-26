@@ -144,13 +144,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.show_db = {};
     $scope.show_db.pass = '';
     $scope.show_db.show = function () {
-        //        if ($scope.show_db.pass == 'error') {
-        //            $scope.show_db.pass = "";
-        //            $state.transitionTo('main.show_db');
-        //        } else {
-        //            $cordovaToast.show("Wrong Pass", 'short', 'bottom');
-        //        }
-        $rootScope.$broadcast('db_update', {});
+        $rootScope.$emit('db_update', {});
         $state.transitionTo('main.show_db');
     };
 

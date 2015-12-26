@@ -210,7 +210,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 track_event.track('Goods Receipt', "Error", error + " " + login_sid.name);
 
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
-                $cordovaSQLite.execute(db, query, ["Voucher Not Send", error]);
+                $cordovaSQLite.execute(db, query, ["GR Not Send", error]);
 
                 console.error(error);
             });
@@ -314,7 +314,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
 
     $scope.item_delievered_quantity_next = function () {
         if ($scope.new_good_receipt.item_delievered_quantity == '')
-            $cordovaToast.show('Enter Delievered Quantity', 'long', 'bottom');
+            $cordovaToast.show('Enter Delievered Quantity', 'long', 'center');
         else
             $state.transitionTo('main.good_receipt.item_received_name');
     };
@@ -335,7 +335,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
 
     $scope.item_received_quantity_next = function () {
         if ($scope.new_good_receipt.item_received_quantity == '')
-            $cordovaToast.show('Enter Received Quantity', 'long', 'bottom');
+            $cordovaToast.show('Enter Received Quantity', 'long', 'center');
         else
             $state.transitionTo('main.good_receipt.acknowledgement');
     };

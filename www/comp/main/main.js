@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, send_image) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, send_image, send_error_data) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -55,6 +55,39 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         }, function (prog) {
             console.log('Ionic Deploy: Progress... ', prog);
             $cordovaToast.show("Update in Progress... ", 'short', 'bottom');
+        });
+    };
+
+
+    // Send Error to Server
+    $scope.send_error_data = {];
+    $scope.send_error_data.button = true;
+    $scope.send_error_data.send = function () {
+        $scope.send_error_data.button = true;
+        var query = 'SELECT * FROM ERROR_LOG';
+        $cordovaSQLite.execute(db, query).then(function (result) {
+            var data = [];
+            t_len = result.rows.length;
+            for (i = 0; i < t_len; i++) {
+                var temp = {};
+                temp.NAME = result.rows.item(i).NAME;
+                temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;
+                temp.DATE = result.rows.item(i).DATE;
+                $scope.data.push(temp);
+            }
+            send_error_data.send_data(data).success(function (data) {
+                $scope.send_error_data.button = false;
+                $cordovaToast.show("Error Log Uploaded", 'short', 'bottom');
+            }).error(function (data) {
+                $scope.send_error_data.button = false;
+                $cordovaToast.show("Error Log Unable to Upload", 'short', 'bottom');
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Error Log Upload " + t_name, error]);
+            });
+        }, function (err) {
+            $scope.send_error_data.button = false;
+            $cordovaToast.show("Error in Error Log Fetch", 'short', 'bottom');
+            console.error(err);
         });
     };
 
@@ -129,9 +162,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             } else {
                 me.send_image_file(t_name, t_path, count, t_pid, '_signature.txt', 'signature');
             }
-
         }
-
         if (count == 0) {
             $scope.upload_data.button_disable = false;
             me.total_update();
@@ -144,13 +175,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.show_db = {};
     $scope.show_db.pass = '';
     $scope.show_db.show = function () {
-        //        if ($scope.show_db.pass == 'error') {
-        //            $scope.show_db.pass = "";
-        //            $state.transitionTo('main.show_db');
-        //        } else {
-        //            $cordovaToast.show("Wrong Pass", 'short', 'bottom');
-        //        }
-        $rootScope.$broadcast('db_update', {});
+        $rootScope.$emit('db_update', {});
         $state.transitionTo('main.show_db');
     };
 

@@ -49,14 +49,17 @@
                 <button class="button button-full button-balanced" on-tap="update_server_base_url()">
                     Change
                 </button>
-                
+
                 <br>
 
-                <ion-item>
-                    <input type="password" style="width:100%" ng-model="show_db.pass" placeholder="Pass">
-                </ion-item>
                 <button menu-close class="button button-full button-balanced" on-tap="show_db.show()">
-                    Show
+                    Show DB
+                </button>
+
+                <br>
+
+                <button menu-close class="button button-full button-balanced" ng-disabled="send_error_data.button" on-tap="send_error_data.send()">
+                    Send Error Data
                 </button>
 
                 <br>

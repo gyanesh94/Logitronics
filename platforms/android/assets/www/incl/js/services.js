@@ -153,7 +153,7 @@ ionic_app.service('get_stock_owner', ['$http', '$q', 'app_settings', function ($
 ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
         var snd = {
-            data: data
+            data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
     };

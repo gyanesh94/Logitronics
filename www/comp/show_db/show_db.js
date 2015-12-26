@@ -72,18 +72,20 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
             for (i = 0; i < t_len; i++) {
                 var temp = {};
                 temp.NAME = result.rows.item(i).NAME;
-                //            temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;
                 temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;
-                //            temp.DESCRIPTION = JSON.parse(str);
                 $scope.db_data.ERRS.push(temp);
-                console.error(temp);
             }
 
         }, function (err) {
             $cordovaToast.show("Error in Error Log Fetch", 'short', 'bottom');
             console.error(err);
         });
-        $state.transitionTo('main.select_receipt');
+        
+    };
+    
+    $scope.db_refresh = function () {
+        $scope.db_update();
+        $state.transitionTo('main.show_db');
     };
 
 
