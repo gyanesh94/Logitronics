@@ -45,7 +45,7 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         }, function (err) {
             console.error(err);
         });
-        var query = "CREATE TABLE IF NOT EXISTS ERROR_LOG (NAME TEXT, DESCRIPTION TEXT, DATE TEXT DATE(NOW))";
+        var query = "CREATE TABLE IF NOT EXISTS ERROR_LOG (NAME TEXT, DESCRIPTION TEXT, DATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP)";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Error_Log Table Created");
         }, function (error) {

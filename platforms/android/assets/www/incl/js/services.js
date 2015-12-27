@@ -70,6 +70,7 @@ ionic_app.service('switch_preffered_language', ['$translate', function ($transla
 ionic_app.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
+    $httpProvider.defaults.timeout = 5000;
 });
 
 // Login Authentication
@@ -167,6 +168,19 @@ ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function 
             data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Goods Receipt', $.param(snd));
+    };
+}]);
+
+
+// Send Error to Server
+ionic_app.service('send_error_data', ['$http', 'app_settings', 'login_sid', function ($http, app_settings, login_sid) {
+    this.send_data = function (data, device) {
+        var snd = {
+            data: JSON.stringify(data),
+            device: JSON.stringify(device),
+            person: JSON.stringify(login_sid)
+        };
+        return $http.post(app_settings.server_base_url + '/api/resource/error_log', $.param(snd));
     };
 }]);
 

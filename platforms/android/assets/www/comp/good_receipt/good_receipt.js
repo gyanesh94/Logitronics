@@ -309,12 +309,14 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
     };
 
     $scope.item_delievered_name_skip = function () {
+        $scope.new_good_receipt.item_delievered_name = '';
+        $scope.new_good_receipt.item_delievered_quantity = '';
         $state.transitionTo('main.good_receipt.item_received_name');
     };
 
     $scope.item_delievered_quantity_next = function () {
         if ($scope.new_good_receipt.item_delievered_quantity == '')
-            $cordovaToast.show('Enter Delievered Quantity', 'long', 'center');
+            $cordovaToast.show('Enter Delievered Quantity', 'short', 'center');
         else
             $state.transitionTo('main.good_receipt.item_received_name');
     };
@@ -330,12 +332,14 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
     };
 
     $scope.item_received_name_skip = function () {
+        $scope.new_good_receipt.item_received_name = '';
+        $scope.new_good_receipt.item_received_quantity = '';
         $state.transitionTo('main.good_receipt.acknowledgement');
     };
 
     $scope.item_received_quantity_next = function () {
         if ($scope.new_good_receipt.item_received_quantity == '')
-            $cordovaToast.show('Enter Received Quantity', 'long', 'center');
+            $cordovaToast.show('Enter Received Quantity', 'short', 'center');
         else
             $state.transitionTo('main.good_receipt.acknowledgement');
     };

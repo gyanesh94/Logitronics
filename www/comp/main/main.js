@@ -60,35 +60,44 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
 
 
     // Send Error to Server
-    $scope.send_error_data = {];
-    $scope.send_error_data.button = true;
+    $scope.send_error_data = {};
+    $scope.send_error_data.button = false;
     $scope.send_error_data.send = function () {
         $scope.send_error_data.button = true;
         var query = 'SELECT * FROM ERROR_LOG';
-        $cordovaSQLite.execute(db, query).then(function (result) {
-            var data = [];
-            t_len = result.rows.length;
-            for (i = 0; i < t_len; i++) {
-                var temp = {};
-                temp.NAME = result.rows.item(i).NAME;
-                temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;
-                temp.DATE = result.rows.item(i).DATE;
-                $scope.data.push(temp);
-            }
-            send_error_data.send_data(data).success(function (data) {
+        $cordovaSQLite.execute(db, query)
+            .then(function (result) {
+                var data = [];
+                t_len = result.rows.length;
+                for (i = 0; i < t_len; i++) {
+                    var temp = {};
+                    temp.NAME = result.rows.item(i).NAME;
+                    temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;
+                    temp.DATE = result.rows.item(i).DATE_TIME;
+                    data.push(temp);
+                }
+                device_info = {};
+                device_info.platform = device.platform;
+                device_info.version = device.version;
+                device_info.model = device.model;
+                device_info.serial = device.serial;
+                send_error_data.send_data(data, device)
+                    .success(function (data) {
+                        $scope.send_error_data.button = false;
+                        $cordovaToast.show("Error Log Uploaded", 'short', 'bottom');
+                    })
+                    .error(function (error) {
+                        $scope.send_error_data.button = false;
+                        $cordovaToast.show("Error Log Unable to Upload " + error, 'short', 'bottom');
+                        console.error(error);
+                        var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                        $cordovaSQLite.execute(db, query, ["Error Log Upload ", error.exc]);
+                    });
+            }, function (error) {
                 $scope.send_error_data.button = false;
-                $cordovaToast.show("Error Log Uploaded", 'short', 'bottom');
-            }).error(function (data) {
-                $scope.send_error_data.button = false;
-                $cordovaToast.show("Error Log Unable to Upload", 'short', 'bottom');
-                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
-                $cordovaSQLite.execute(db, query, ["Error Log Upload " + t_name, error]);
+                $cordovaToast.show("Error in Error Log Fetch" + error, 'short', 'bottom');
+                console.error(error);
             });
-        }, function (err) {
-            $scope.send_error_data.button = false;
-            $cordovaToast.show("Error in Error Log Fetch", 'short', 'bottom');
-            console.error(err);
-        });
     };
 
 

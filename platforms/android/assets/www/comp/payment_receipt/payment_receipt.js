@@ -80,7 +80,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
                     error = "Server Error";
                 }
                 $cordovaToast.show(error + " Contact Admin", 'long', 'bottom');
-                track_event.track('Payment Receipt', "Error", message + " " + login_sid.name);
+                track_event.track('Payment Receipt', "Error", error + " " + login_sid.name);
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                 $cordovaSQLite.execute(db, query, ["PR Not Send", error]);
             });
