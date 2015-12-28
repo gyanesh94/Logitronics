@@ -14,6 +14,11 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             }, function (error) {});
     };
 
+    $rootScope.$on("error_403", function (event, args) {
+        $scope.log_out();
+    });
+
+
     // update app settings file
     $scope.update_app_settings_file = function (data) {
         document.addEventListener('deviceready', function () {

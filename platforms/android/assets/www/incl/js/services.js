@@ -1,12 +1,14 @@
 // http error interceptor
-ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings', '$cordovaNetwork', 'track_event', function ($q, $location, $cordovaToast, login_sid, app_settings, $cordovaNetwork, track_event) {
+ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToast', 'login_sid', 'app_settings', '$cordovaNetwork', 'track_event', '$rootScope', function ($q, $location, $cordovaToast, login_sid, app_settings, $cordovaNetwork, track_event, $rootScope) {
     return {
         responseError: function (rejection) {
             var stat = rejection.status;
             var msg = '';
-            if (stat == 403)
+            if (stat == 403) {
                 msg = 'Login Required';
-            else if (stat == 500)
+                $cordovaToast.show(msg, 'short', 'bottom');
+                $rootScope.$emit('error_403', {});
+            } else if (stat == 500)
                 msg = 'Internal Server Error';
             else if (stat == 501)
                 msg = 'Server Error';
@@ -37,7 +39,7 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
             }
             return config;
         }
-    }
+    };
 }]);
 
 
