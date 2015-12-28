@@ -1,4 +1,4 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $ionicHistory, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, $cordovaSQLite, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid) {
+ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $ionicHistory, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, $cordovaSQLite, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid, send_error_data) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -71,6 +71,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 $cordovaSQLite.execute(db, query, ["Image jpg to Base64 Error", error]);
                 $cordovaCamera.cleanup().then(); // only for FILE_URI
                 $scope.new_good_receipt_search.take_signature_next_disable = false;
+                t_send_error = {};
+                t_send_error.NAME = "Image jpg to Base64 Error";
+                t_send_error.DESCRIPTION = error;
+                send_error_data.send_data(t_send_error, device);
                 $state.transitionTo('main.good_receipt.take_picture_location');
             });
         });
@@ -88,6 +92,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         file_name = 'gr_' + $scope.new_good_receipt.voucher_id;
         $cordovaFile.writeFile(path, file_name + '_customer_image.txt', $scope.new_good_receipt.customer_image, true)
             .then(function (success) {
+
                 send_image.send($scope.new_good_receipt.voucher_id, $scope.new_good_receipt.customer_image, 'gr_' + $scope.new_good_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
                     .success(function (data) {
                         var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
@@ -96,7 +101,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                     .error(function (error) {
                         var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
                         $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.new_good_receipt.voucher_id]);
+                        t_send_error = {};
+                        t_send_error.NAME = "Error in sending Customer image";
+                        t_send_error.DESCRIPTION = file_name + '_customer_image.txt ' + error;
+                        send_error_data.send_data(t_send_error, device);
                     });
+
             }, function (error) {
                 send_image.send($scope.new_good_receipt.voucher_id, $scope.new_good_receipt.customer_image, 'gr_' + $scope.new_good_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
                     .success(function (data) {
@@ -109,6 +119,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 console.error(error);
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                 $cordovaSQLite.execute(db, query, ["Customer Image Not Stored " + $scope.new_good_receipt.voucher_id, error]);
+                t_send_error = {};
+                t_send_error.NAME = "Customer Image Not Stored";
+                t_send_error.DESCRIPTION = $scope.new_good_receipt.voucher_id + ' ' + error;
+                send_error_data.send_data(t_send_error, device);
                 $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
             });
 
@@ -122,6 +136,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                     .error(function (error) {
                         var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
                         $cordovaSQLite.execute(db, query, [file_name + '_signature.txt', $scope.new_good_receipt.voucher_id]);
+                        t_send_error = {};
+                        t_send_error.NAME = "Error in sending Signature";
+                        t_send_error.DESCRIPTION = file_name + '_signature.txt ' + error;
+                        send_error_data.send_data(t_send_error, device);
                     });
             }, function (error) {
                 send_image.send($scope.new_good_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.new_good_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
@@ -135,6 +153,10 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 console.error(error);
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                 $cordovaSQLite.execute(db, query, ["Customer Signature Not Stored " + $scope.new_good_receipt.voucher_id, error]);
+                t_send_error = {};
+                t_send_error.NAME = "Signarure Not Stored";
+                t_send_error.DESCRIPTION = $scope.new_good_receipt.voucher_id + ' ' + error;
+                send_error_data.send_data(t_send_error, device);
                 $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
             });
 
@@ -212,6 +234,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                 $cordovaSQLite.execute(db, query, ["GR Not Send", error]);
 
+                t_send_error = {};
+                t_send_error.NAME = "GR Not Send";
+                t_send_error.DESCRIPTION = error;
+                send_error_data.send_data(t_send_error, device);
+
                 console.error(error);
             });
     };
@@ -245,6 +272,12 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                 $cordovaSQLite.execute(db, query, ["Camera Error", error]);
                 $scope.new_good_receipt_search.take_signature_next_disable = false;
                 console.error(error);
+
+                t_send_error = {};
+                t_send_error.NAME = "Camera Error";
+                t_send_error.DESCRIPTION = error;
+                send_error_data.send_data(t_send_error, device);
+
                 if (error != "Camera cancelled.")
                     $state.transitionTo('main.good_receipt.take_picture_location');
             });
@@ -271,6 +304,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                     console.error(error);
                     var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                     $cordovaSQLite.execute(db, query, ["GPRS Error", error]);
+
+                    t_send_error = {};
+                    t_send_error.NAME = "GPRS Error";
+                    t_send_error.DESCRIPTION = error;
+                    send_error_data.send_data(t_send_error, device);
                 });
         });
     };

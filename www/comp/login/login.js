@@ -1,4 +1,4 @@
-ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, login_authentication, login_sid, track_event) {
+ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast, $ionicHistory, $cordovaFile, login_authentication, login_sid, track_event, send_error_data) {
 
     $ionicHistory.clearHistory();
 
@@ -49,8 +49,23 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                     if (data.message) {
                         $cordovaToast.show(data.message, 'short', 'bottom');
                         track_event.track('Login', 'Failure', data.message + " " + $scope.login.username);
+                        t_send_error = {};
+                        t_send_error.NAME = "Login Error Data";
+                        t_send_error.DESCRIPTION = data.message;
+                        send_error_data.send_data(t_send_error, device);
+                    } else {
+                        t_send_error = {};
+                        t_send_error.NAME = "Login Error Data";
+                        t_send_error.DESCRIPTION = data;
+                        send_error_data.send_data(t_send_error, device);
                     }
+                } else {
+                    t_send_error = {};
+                    t_send_error.NAME = "Login Error Data";
+                    t_send_error.DESCRIPTION = data;
+                    send_error_data.send_data(t_send_error, device);
                 }
+
                 track_event.track('Login', 'Login Failure', $scope.login.username);
             });
     };

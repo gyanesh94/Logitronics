@@ -174,15 +174,40 @@ ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function 
 }]);
 
 
-// Send Error to Server
-ionic_app.service('send_error_data', ['$http', 'app_settings', 'login_sid', function ($http, app_settings, login_sid) {
+// Send individual error data
+ionic_app.service('send_error_data', ['$http', 'app_settings', 'login_sid', '$cordovaSQLite', function ($http, app_settings, login_sid, $cordovaSQLite) {
     this.send_data = function (data, device) {
         var snd = {
             data: JSON.stringify(data),
             device: JSON.stringify(device),
             person: JSON.stringify(login_sid)
         };
-        return $http.post(app_settings.server_base_url + '/api/resource/error_log', $.param(snd));
+        address = "http://arungas.com:9001";
+        $http.post(address + '/error_api', $.param(snd))
+            .success(function (data) {
+                return null;
+            })
+            .error(function (error) {
+                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+                $cordovaSQLite.execute(db, query, ["Individual Error Not uploaded", JSON.stringify(error)]);
+                console.error(error);
+                return null;
+            });
+        return null;
+    };
+}]);
+
+
+// Upload Bulk Error to Server
+ionic_app.service('upload_error_data', ['$http', 'app_settings', 'login_sid', function ($http, app_settings, login_sid) {
+    this.send_data = function (data, device) {
+        var snd = {
+            data: JSON.stringify(data),
+            device: JSON.stringify(device),
+            person: JSON.stringify(login_sid)
+        };
+        address = "http://arungas.com:9001";
+        return $http.post(address + '/error_api/bulk', $.param(snd));
     };
 }]);
 

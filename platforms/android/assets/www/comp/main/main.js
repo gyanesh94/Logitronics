@@ -1,4 +1,4 @@
-ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, send_image, send_error_data) {
+ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $cordovaFile, $cordovaToast, $ionicDeploy, $cordovaSQLite, switch_preffered_language, app_settings, login_sid, track_event, send_image, upload_error_data, send_error_data) {
 
     $scope.log_out = function () {
         document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -53,10 +53,16 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             console.log('Ionic Deploy: Update Success! ', res);
             $cordovaToast.show("Update Successful", 'short', 'bottom');
             track_event.track('Ionic Deploy', "Update Successful", res + " " + login_sid.name);
-        }, function (err) {
-            console.log('Ionic Deploy: Update error! ', err);
-            $cordovaToast.show("Update Error", 'short', 'bottom');
-            track_event.track('Ionic Deploy', "Update Error", err + " " + login_sid.name);
+        }, function (error) {
+            console.log('Ionic Deploy: Update error! ', error);
+            $cordovaToast.show("Update Error " + error, 'short', 'bottom');
+
+            t_send_error = {};
+            t_send_error.NAME = "Update Error";
+            t_send_error.DESCRIPTION = error;
+            send_error_data.send_data(t_send_error, device);
+
+            track_event.track('Ionic Deploy', "Update Error", error + " " + login_sid.name);
         }, function (prog) {
             console.log('Ionic Deploy: Progress... ', prog);
             $cordovaToast.show("Update in Progress... ", 'short', 'bottom');
@@ -81,12 +87,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
                     temp.DATE = result.rows.item(i).DATE_TIME;
                     data.push(temp);
                 }
-                device_info = {};
-                device_info.platform = device.platform;
-                device_info.version = device.version;
-                device_info.model = device.model;
-                device_info.serial = device.serial;
-                send_error_data.send_data(data, device)
+                upload_error_data.send_data(data, device)
                     .success(function (data) {
                         $scope.send_error_data.button = false;
                         $cordovaToast.show("Error Log Uploaded", 'short', 'bottom');
@@ -96,7 +97,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
                         $cordovaToast.show("Error Log Unable to Upload " + error, 'short', 'bottom');
                         console.error(error);
                         var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
-                        $cordovaSQLite.execute(db, query, ["Error Log Upload ", error.exc]);
+                        $cordovaSQLite.execute(db, query, ["Error Log Upload ", JSON.stringify(error)]);
                     });
             }, function (error) {
                 $scope.send_error_data.button = false;
@@ -120,9 +121,9 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $cordovaSQLite.execute(db, query).then(function (result) {
             me.data_temp_files = result;
             $scope.upload_data.sync_total = me.data_temp_files.rows.length;
-        }, function (err) {
-            $cordovaToast.show("Error in Files DB Fetch", 'short', 'bottom');
-            console.error(err);
+        }, function (error) {
+            $cordovaToast.show("Error in Files DB Fetch " + error, 'short', 'bottom');
+            console.error(error);
             me.data_temp_files = null;
         });
     };
@@ -149,6 +150,10 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
                     track_event.track('File Not Uploaded ' + t_name, "Error ", error + " " + login_sid.name);
                     var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                     $cordovaSQLite.execute(db, query, ["File Not Uploaded " + t_name, error]);
+                    t_send_error = {};
+                    t_send_error.NAME = "File Not Uploaded " + t_name;
+                    t_send_error.DESCRIPTION = error;
+                    send_error_data.send_data(t_send_error, device);
                     $scope.upload_data.upload(count);
                 });
         }, function (error) {
@@ -158,6 +163,10 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             track_event.track('File Not Read ' + t_name, "Error ", error + " " + login_sid.name);
             var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
             $cordovaSQLite.execute(db, query, ["File Not Read " + t_name, error]);
+            t_send_error = {};
+            t_send_error.NAME = "File Not Read " + t_name;
+            t_send_error.DESCRIPTION = error;
+            send_error_data.send_data(t_send_error, device);
             $scope.upload_data.upload(count);
         });
     };
@@ -201,10 +210,14 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             console.log('Ionic Deploy: Update available: ' + hasUpdate);
             $cordovaToast.show("Update available", 'short', 'bottom');
             $scope.hasUpdate = hasUpdate;
-        }, function (err) {
-            console.error('Ionic Deploy: Unable to check for updates', err);
-            $cordovaToast.show("Unable to check for updates", 'short', 'bottom');
-            track_event.track('Ionic Deploy', "Check for update Error", err + " " + login_sid.name);
+        }, function (error) {
+            console.error('Ionic Deploy: Unable to check for updates', error);
+            $cordovaToast.show("Unable to check for updates " + error, 'short', 'bottom');
+            t_send_error = {};
+            t_send_error.NAME = "Ionic Deploy: Unable to check for updates";
+            t_send_error.DESCRIPTION = error;
+            send_error_data.send_data(t_send_error, device);
+            track_event.track('Ionic Deploy', "Check for update Error", error + " " + login_sid.name);
         });
     }
 });

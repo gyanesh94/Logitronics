@@ -1,4 +1,4 @@
-ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope, $state, $cordovaToast, $cordovaSQLite, get_stock_owner, create_new_payment_receipt, track_event, login_sid) {
+ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope, $state, $cordovaToast, $cordovaSQLite, get_stock_owner, create_new_payment_receipt, track_event, login_sid, send_error_data) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -80,6 +80,10 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
                     error = "Server Error";
                 }
                 $cordovaToast.show(error + " Contact Admin", 'long', 'bottom');
+                t_send_error = {};
+                t_send_error.NAME = "Payment Receipt " + final_data.id;
+                t_send_error.DESCRIPTION = error;
+                send_error_data.send_data(t_send_error, device);
                 track_event.track('Payment Receipt', "Error", error + " " + login_sid.name);
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
                 $cordovaSQLite.execute(db, query, ["PR Not Send", error]);

@@ -1,4 +1,4 @@
-ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQLite, $cordovaToast, $rootScope) {
+ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQLite, $cordovaToast, $rootScope, send_error_data) {
 
     $scope.db_to_home = function () {
         $state.transitionTo('main.select_receipt');
@@ -43,7 +43,11 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
                 }
             }
         }, function (err) {
-            $cordovaToast.show("Error in Receipt Data Fetch", 'short', 'bottom');
+            $cordovaToast.show("Error in Receipt Data Fetch " + err, 'short', 'bottom');
+            t_send_error = {};
+            t_send_error.NAME = "Error in Receipt Data Fetch";
+            t_send_error.DESCRIPTION = err;
+            send_error_data.send_data(t_send_error, device);
             console.error(err);
         });
 
@@ -61,7 +65,11 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
                 $scope.db_data.FILES.push(temp);
             }
         }, function (err) {
-            $cordovaToast.show("Error in Receipt Files Fetch", 'short', 'bottom');
+            $cordovaToast.show("Error in Receipt Files Fetch " + err, 'short', 'bottom');
+            t_send_error = {};
+            t_send_error.NAME = "Error in Receipt Files Fetch";
+            t_send_error.DESCRIPTION = err;
+            send_error_data.send_data(t_send_error, device);
             console.error(err);
         });
 
@@ -77,12 +85,16 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
             }
 
         }, function (err) {
-            $cordovaToast.show("Error in Error Log Fetch", 'short', 'bottom');
+            $cordovaToast.show("Error in Error Log Fetch " + err, 'short', 'bottom');
+            t_send_error = {};
+            t_send_error.NAME = "Error in Error Log Fetch";
+            t_send_error.DESCRIPTION = err;
+            send_error_data.send_data(t_send_error, device);
             console.error(err);
         });
-        
+
     };
-    
+
     $scope.db_refresh = function () {
         $scope.db_update();
         $state.transitionTo('main.show_db');
