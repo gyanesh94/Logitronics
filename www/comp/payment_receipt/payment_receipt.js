@@ -11,7 +11,8 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
         stock_owner: {},
         voucher_id: '',
         transaction_type: 'Refill',
-        item: 'FC19'
+        item: 'FC19',
+        customer:''
     };
 
     $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
@@ -51,6 +52,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
             qty: qty,
             amount_per_item: amt_per_item,
             total: total,
+            customer: $scope.new_payment_receipt.customer,
             company: "VK Logistics",
             stock_date: now_date,
             posting_date: now_date,

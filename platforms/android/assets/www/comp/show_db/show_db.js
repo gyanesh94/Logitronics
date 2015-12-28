@@ -26,7 +26,7 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
 
         $cordovaSQLite.execute(db, query).then(function (result) {
             t_len = result.rows.length;
-            for (i = 0; i < t_len; i++) {
+            for (i = t_len - 1; i >= 0; i--) {
                 var temp = {};
                 temp.ID = result.rows.item(i).ID;
                 str = result.rows.item(i).METADATA;
@@ -55,7 +55,7 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
         var query = 'SELECT * FROM RECEIPT_FILES';
         $cordovaSQLite.execute(db, query).then(function (result) {
             t_len = result.rows.length;
-            for (i = 0; i < t_len; i++) {
+            for (i = t_len - 1; i >= 0; i--) {
                 var temp = {};
                 temp.FILE_NAME = result.rows.item(i).FILE_NAME;
                 if (result.rows.item(i).UPLOADED == 0)
@@ -77,7 +77,7 @@ ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQL
         var query = 'SELECT * FROM ERROR_LOG';
         $cordovaSQLite.execute(db, query).then(function (result) {
             t_len = result.rows.length;
-            for (i = 0; i < t_len; i++) {
+            for (i = t_len - 1; i >= 0; i--) {
                 var temp = {};
                 temp.NAME = result.rows.item(i).NAME;
                 temp.DESCRIPTION = result.rows.item(i).DESCRIPTION;

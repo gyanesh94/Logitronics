@@ -326,7 +326,7 @@ ionic_app.value('canvas_signature', {
 
 // File Settings
 ionic_app.value('app_settings', {
-    server_base_url: 'http://192.168.1.10:8080'
+    server_base_url: 'https://erp.arungas.com'
 });
 
 // Login Session ID
@@ -348,6 +348,7 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT: 'Payment Receipt',
         ACKNOWLEDGEMENT: 'Acknowledgement',
         GOOD_RECEIPT_DETAILS: 'Good Receipt Details',
+        CUSTOMER: "Customer",
         CUSTOMER_NAME: 'Customer Name',
         ITEM_DELIEVERED_NAME: 'Item Delivered Name',
         ITEM_DELIEVERED_QUANTITY: 'Item Delivered Quantity',
@@ -390,6 +391,7 @@ ionic_app.config(function ($translateProvider) {
         PAYMENT_RECEIPT: 'भुगतान रसीद',
         ACKNOWLEDGEMENT: 'प्राप्ति सूचना',
         GOOD_RECEIPT_DETAILS: 'चालान विवरण',
+        CUSTOMER: 'ग्राहक',
         CUSTOMER_NAME: 'ग्राहक का नाम',
         ITEM_DELIEVERED_NAME: 'आइटम वितरित नाम',
         ITEM_DELIEVERED_QUANTITY: 'आइटम वितरित मात्रा',

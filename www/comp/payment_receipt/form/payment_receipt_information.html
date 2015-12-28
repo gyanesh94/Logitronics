@@ -25,6 +25,16 @@
                     <input type="number" min="1" ng-model="new_payment_receipt.voucher_id" placeholder="{{'VOUCHER_ID' | translate}}" required>
                 </label>
             </div>
+            
+            <!-- Customer  -->
+            <div class="card">
+                <div class="item item-divider">
+                    <span>{{'CUSTOMER' | translate}}</span>
+                </div>
+                <label class="item item-input" style="width:100%;">
+                    <input type="text" min="1" ng-model="new_payment_receipt.customer" placeholder="{{'CUSTOMER' | translate}}" required>
+                </label>
+            </div>
 
             <!--  Quantity  -->
             <div class="card">
