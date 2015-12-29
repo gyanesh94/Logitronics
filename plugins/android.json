@@ -89,9 +89,6 @@
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
-        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         },
@@ -123,6 +120,9 @@
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         },
         "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
+        },
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "com.ionicframework.ionicapp260406"
         }
     },

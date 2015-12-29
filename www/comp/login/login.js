@@ -22,8 +22,6 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
         });
     };
 
-    console.log("11");
-    console.error(login_sid);
     $scope.login.username = login_sid.username;
 
     $scope.login_validation = function () {
