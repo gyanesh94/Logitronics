@@ -110,8 +110,6 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                 $cordovaFile.readAsText(cordova.file.dataDirectory, "sid.txt")
                                     .then(function (success) {
                                         var data = JSON.parse(success);
-                                        console.log("12");
-                                        console.error(data);
                                         $.each(data, function (key, value) {
                                             login_sid[key] = value;
                                         });

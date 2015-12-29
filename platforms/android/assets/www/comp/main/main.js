@@ -5,14 +5,10 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $rootScope.$broadcast('log_out_event', {
             message: 'logout'
         });
-        
+
         login_sid.name = '';
         login_sid.sid = '';
 
-        
-        console.log("10");
-        console.error(login_sid);
-        
         $cordovaFile.writeFile(cordova.file.dataDirectory, "sid.txt", JSON.stringify(login_sid), true)
             .then(function (success) {
                 track_event.track('Logout', 'Successfull', login_sid.name);

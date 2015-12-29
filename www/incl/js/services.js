@@ -37,6 +37,7 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                     config.url = config.url + '&' + sid;
                 }
             }
+            config.timeout = 5000;
             return config;
         }
     };
@@ -72,7 +73,6 @@ ionic_app.service('switch_preffered_language', ['$translate', function ($transla
 ionic_app.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
-    $httpProvider.defaults.timeout = 5000;
 });
 
 // Login Authentication
