@@ -5,13 +5,30 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $rootScope.$broadcast('log_out_event', {
             message: 'logout'
         });
-        $cordovaFile.removeFile(cordova.file.dataDirectory, "sid.txt")
+        
+        login_sid.name = '';
+        login_sid.sid = '';
+
+        
+        console.log("10");
+        console.error(login_sid);
+        
+        $cordovaFile.writeFile(cordova.file.dataDirectory, "sid.txt", JSON.stringify(login_sid), true)
             .then(function (success) {
-                login_sid.sid = '';
                 track_event.track('Logout', 'Successfull', login_sid.name);
-                login_sid.name = '';
+                $cordovaToast.show("Logout Successfully", 'short', 'bottom');
                 $state.transitionTo('main.login');
             }, function (error) {});
+
+
+        //        $cordovaFile.removeFile(cordova.file.dataDirectory, "sid.txt")
+        //            .then(function (success) {
+        //                login_sid.sid = '';
+        //                track_event.track('Logout', 'Successfull', login_sid.name);
+        //                login_sid.name = '';
+        //                $state.transitionTo('main.login');
+        //            }, function (error) {});
+
     };
 
     $rootScope.$on("error_403", function (event, args) {
@@ -46,6 +63,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
     $scope.switch_to_hindi = function () {
         switch_preffered_language.translate_language('hi');
     };
+
 
     // Update app code with new release from Ionic Deploy
     $scope.doUpdate = function () {

@@ -110,6 +110,8 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                 $cordovaFile.readAsText(cordova.file.dataDirectory, "sid.txt")
                                     .then(function (success) {
                                         var data = JSON.parse(success);
+                                        console.log("12");
+                                        console.error(data);
                                         $.each(data, function (key, value) {
                                             login_sid[key] = value;
                                         });
@@ -117,7 +119,8 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                                             analytics.setUserId(login_sid.name);
                                         }
                                         promise.resolve();
-                                        $state.go('main.select_receipt');
+                                        if (login_sid.sid != '')
+                                            $state.go('main.select_receipt');
                                     }, function (error) {
                                         console.log("Read As Text Error");
                                         console.error(error);
@@ -332,7 +335,8 @@ ionic_app.value('app_settings', {
 // Login Session ID
 ionic_app.value('login_sid', {
     sid: '',
-    name: ''
+    name: '',
+    username: ''
 });
 
 

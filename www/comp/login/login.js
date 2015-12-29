@@ -22,6 +22,9 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
         });
     };
 
+    console.log("11");
+    console.error(login_sid);
+    $scope.login.username = login_sid.username;
 
     $scope.login_validation = function () {
         $scope.login.disable = true;
@@ -30,17 +33,22 @@ ionic_app.controller('login_controller', function ($scope, $state, $cordovaToast
                 $scope.login.disable = false;
                 sid = {
                     sid: data.sid,
-                    name: data.full_name
+                    name: data.full_name,
+                    username: $scope.login.username
                 };
+                console.log("13");
+                console.error(sid);
                 if (typeof analytics !== "undefined") {
                     analytics.setUserId(sid.name);
                 }
                 track_event.track('Login', 'Successful', sid.name);
                 login_sid.sid = sid.sid;
-                login_sid.name = sid.name
+                login_sid.name = sid.name;
+                login_sid.username = sid.username;
                 $scope.record_sid(sid);
                 delete $scope.login;
                 $scope.login = angular.copy($scope.login_object);
+                $scope.login.username = login_sid.username;
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
