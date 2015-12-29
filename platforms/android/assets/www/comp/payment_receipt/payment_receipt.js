@@ -12,7 +12,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
         voucher_id: '',
         transaction_type: 'Refill',
         item: 'FC19',
-        customer:''
+        customer: ''
     };
 
     $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
@@ -94,7 +94,22 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
 
 
     $scope.payment_receipt_next = function () {
-        $state.transitionTo('main.payment_receipt.payment_receipt_acknowledgement');
+        f = 1;
+        if (!("value" in $scope.new_payment_receipt.stock_owner)) {
+            $cordovaToast.show('Enter Stock Owner', 'short', 'bottom');
+            f = 0;
+        } else if ($scope.new_payment_receipt.voucher_id == '') {
+            $cordovaToast.show('Enter Voucher ID', 'short', 'bottom');
+            f = 0;
+        } else if ($scope.new_payment_receipt.quantity == '') {
+            $cordovaToast.show('Enter quantity', 'short', 'bottom');
+            f = 0;
+        } else if ($scope.new_payment_receipt.amount_per_item == '') {
+            $cordovaToast.show('Enter Amount Per Item', 'short', 'bottom');
+            f = 0;
+        }
+        if (f == 1)
+            $state.transitionTo('main.payment_receipt.payment_receipt_acknowledgement');
     };
 
     $scope.payment_receipt_acknowledgement = function () {
