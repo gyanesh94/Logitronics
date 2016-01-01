@@ -1,7 +1,7 @@
 ionic_app.controller('show_db_controller', function ($scope, $state, $cordovaSQLite, $cordovaToast, $rootScope, send_error_data) {
 
     $scope.db_to_home = function () {
-        $state.transitionTo('main.select_receipt');
+        $state.transitionTo('main.login');
     };
 
 

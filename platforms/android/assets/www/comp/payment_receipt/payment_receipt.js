@@ -36,7 +36,6 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
 
     // Create Payment Receipt
     me.create_payment_receipt = function () {
-        $scope.new_payment_receipt_search.confirm_disable = true;
         now_date = moment().format("YYYY-MM-DD");
         now_time = moment().format("HH:mm:ss");
         qty = $scope.new_payment_receipt.quantity;
@@ -68,14 +67,14 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
                 $cordovaSQLite.execute(db, query, [final_data.id, JSON.stringify(final_data)]);
                 $scope.new_payment_receipt_search.confirm_disable = false;
                 delete $scope.new_payment_receipt;
+                $cordovaToast.show("Payment Receipt Uploaded", 'long', 'bottom');
                 $scope.new_payment_receipt = angular.copy($scope.new_payment_receipt_object);
                 track_event.track('Payment Receipt', 'Confirmed', final_data.id + " " + login_sid.name);
                 $state.transitionTo('main.select_receipt');
             })
             .error(function (data) {
-                $scope.new_payment_receipt_search.confirm_disable = false;
                 error = "";
-                if (data._server_messages) {
+                if ("_server_messages" in data) {
                     error = JSON.parse(data._server_messages);
                     error = error[0];
                 } else {
@@ -85,6 +84,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
                 t_send_error = {};
                 t_send_error.NAME = "Payment Receipt " + final_data.id;
                 t_send_error.DESCRIPTION = error;
+                $scope.new_payment_receipt_search.confirm_disable = false;
                 send_error_data.send_data(t_send_error, device);
                 track_event.track('Payment Receipt', "Error", error + " " + login_sid.name);
                 var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";

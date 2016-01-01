@@ -219,7 +219,7 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
             .error(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
                 error = '';
-                if (data._server_messages) {
+                if ("_server_messages" in data) {
                     error = JSON.parse(data._server_messages);
                     error = error[0];
                 } else {

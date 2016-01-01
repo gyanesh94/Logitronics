@@ -37,7 +37,7 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                     config.url = config.url + '&' + sid;
                 }
             }
-            config.timeout = 1000;
+            config.timeout = 5000;
             return config;
         }
     };

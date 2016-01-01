@@ -1,0 +1,17 @@
+<ion-view view-title="Settings" hide-back-button="true">
+    <ion-content>
+
+        <div class="card">
+            <label class="item item-input">
+                <input type="text" ng-model="app_settings.server_base_url" placeholder="{{'URL' | translate }}">
+            </label>
+        </div>
+        <button class="button button-full button-balanced" on-tap="app_settings.update_server_base_url()">
+            Update
+        </button>
+
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class='button button-balanced pull-right' style="padding: 0 30px;" ng-click='db_to_home()'>Home</button>
+    </ion-footer-bar>
+</ion-view>

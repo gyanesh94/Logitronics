@@ -143,6 +143,15 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('main.set', {
+            url: '/set',
+            views: {
+                'content_view': {
+                    templateUrl: 'comp/set/set.html',
+                    controller: 'set_controller'
+                }
+            }
+        })
         .state('main.select_receipt', {
             url: '/select_receipt',
             views: {
@@ -329,6 +338,13 @@ ionic_app.value('canvas_signature', {
 ionic_app.value('app_settings', {
     server_base_url: 'https://erp.arungas.com'
 });
+
+
+// App Version
+ionic_app.value('app_version', {
+    version: 'v1.0'
+});
+
 
 // Login Session ID
 ionic_app.value('login_sid', {
