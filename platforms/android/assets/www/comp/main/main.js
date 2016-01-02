@@ -135,12 +135,14 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $scope.upload_data.sync_total = 0;
         var query = 'SELECT * FROM RECEIPT_FILES WHERE UPLOADED = 0';
         $cordovaSQLite.execute(db, query).then(function (result) {
+            me.data_temp_files = null;
             me.data_temp_files = result;
             $scope.upload_data.sync_total = me.data_temp_files.rows.length;
         }, function (error) {
             $cordovaToast.show("Error in Files DB Fetch " + error, 'short', 'bottom');
             console.error(error);
             me.data_temp_files = null;
+            $scope.upload_data.sync_total = 0;
         });
     };
 
@@ -199,11 +201,12 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
             if (t_name.indexOf("_customer_image.txt") != -1) {
                 me.send_image_file(t_name, t_path, count, t_pid, '_customer_image.jpg', 'customer_image');
             } else {
-                me.send_image_file(t_name, t_path, count, t_pid, '_signature.txt', 'signature');
+                me.send_image_file(t_name, t_path, count, t_pid, '_signature.jpg', 'signature');
             }
         }
         if (count == 0) {
             $scope.upload_data.button_disable = false;
+            me.data_temp_files = null;
             me.total_update();
         }
     };

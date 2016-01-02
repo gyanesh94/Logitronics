@@ -37,7 +37,6 @@ ionic_app.factory('myHttpResponseInterceptor', ['$q', '$location', '$cordovaToas
                     config.url = config.url + '&' + sid;
                 }
             }
-            config.timeout = 5000;
             return config;
         }
     };
@@ -169,7 +168,7 @@ ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function 
         var snd = {
             data: JSON.stringify(data)
         };
-        return $http.post(app_settings.server_base_url + '/api/resource/Goods Receipt', $.param(snd));
+        return $http.post(app_settings.server_base_url + '/api/method/flows.flows.controller.app_controller.create_gr', $.param(snd));
     };
 }]);
 

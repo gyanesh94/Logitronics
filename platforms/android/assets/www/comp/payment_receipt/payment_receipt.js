@@ -36,6 +36,7 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
 
     // Create Payment Receipt
     me.create_payment_receipt = function () {
+        $scope.new_payment_receipt_search.confirm_disable = true;
         now_date = moment().format("YYYY-MM-DD");
         now_time = moment().format("HH:mm:ss");
         qty = $scope.new_payment_receipt.quantity;

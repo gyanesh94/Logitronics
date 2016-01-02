@@ -75,11 +75,13 @@ ionic_app.controller('payment_receipt_controller', function ($scope, $rootScope,
             })
             .error(function (data) {
                 error = "";
-                if ("_server_messages" in data) {
-                    error = JSON.parse(data._server_messages);
-                    error = error[0];
-                } else {
-                    error = "Server Error";
+                if (data != null) {
+                    if ("_server_messages" in data) {
+                        error = JSON.parse(data._server_messages);
+                        error = error[0];
+                    } else {
+                        error = "Server Error";
+                    }
                 }
                 $cordovaToast.show(error + " Contact Admin", 'long', 'bottom');
                 t_send_error = {};
