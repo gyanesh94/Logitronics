@@ -1,4 +1,4 @@
-ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $state, $ionicHistory, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, $cordovaSQLite, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid, send_error_data) {
+ionic_app.controller('good_receipt_controller', function ($scope, $q, $rootScope, $state, $ionicHistory, $cordovaToast, $cordovaCamera, $cordovaFile, $cordovaGeolocation, $cordovaSQLite, get_customer_live, images_link_empty, images_link_filled, get_vehicle_live, create_new_good_receipt, canvas_signature, send_image, track_event, login_sid, send_error_data) {
     var me = this;
 
     if (typeof analytics !== "undefined") {
@@ -95,80 +95,275 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
 
     // Save Image Base64 to File
     $scope.save_img_to_file = function () {
-        path = cordova.file.dataDirectory + "/proof_img/";
-        file_name = 'gr_' + $scope.temp_data_receipt.voucher_id;
-        $cordovaFile.writeFile(path, file_name + '_customer_image.txt', $scope.temp_data_receipt.customer_image, true)
-            .then(function (success) {
+        me.file_info = {};
+        me.file_info.path = cordova.file.dataDirectory + "/proof_img/";
+        me.file_info.file_name = 'gr_' + $scope.temp_data_receipt.voucher_id;
 
-                send_image.send($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image, 'gr_' + $scope.temp_data_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
-                    .success(function (data) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
-                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
-                    })
-                    .error(function (error) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
-                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
-                        t_send_error = {};
-                        t_send_error.NAME = "Error in sending Customer image";
-                        t_send_error.DESCRIPTION = file_name + '_customer_image.txt ' + JSON.stringify(error);
-                        send_error_data.send_data(t_send_error, device);
-                    });
+        $scope.new_good_receipt_search.confirm_disable = false;
+        
+        me.functions = {};
+        me.promises = {};
 
-            }, function (error) {
-                send_image.send($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image, 'gr_' + $scope.temp_data_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
-                    .success(function (data) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
-                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Customer Image ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
-                    });
-                if (typeof error == 'object')
-                    error = JSON.stringify(error);
-                console.log("1");
-                console.error(error);
-                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
-                $cordovaSQLite.execute(db, query, ["Customer Image Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
-                t_send_error = {};
-                t_send_error.NAME = "Customer Image Not Stored";
-                t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
-                send_error_data.send_data(t_send_error, device);
-                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
-            });
 
-        $cordovaFile.writeFile(path, file_name + '_signature.txt', canvas_signature.signature, true)
-            .then(function (success) {
-                send_image.send($scope.temp_data_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.temp_data_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
-                    .success(function (data) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
-                        $cordovaSQLite.execute(db, query, [file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
-                    })
-                    .error(function (error) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
-                        $cordovaSQLite.execute(db, query, [file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
-                        t_send_error = {};
-                        t_send_error.NAME = "Error in sending Signature";
-                        t_send_error.DESCRIPTION = file_name + '_signature.txt ' + JSON.stringify(error);
-                        send_error_data.send_data(t_send_error, device);
-                    });
-            }, function (error) {
-                send_image.send($scope.temp_data_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.temp_data_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
-                    .success(function (data) {
-                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
-                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Signature ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
-                    });
-                if (typeof error == 'object')
-                    error = JSON.stringify(error);
-                console.log("2");
-                console.error(error);
-                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
-                $cordovaSQLite.execute(db, query, ["Customer Signature Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
-                t_send_error = {};
-                t_send_error.NAME = "Signarure Not Stored";
-                t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
-                send_error_data.send_data(t_send_error, device);
-                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
-            });
+        // Customer Image Functions
+        me.functions.send_cust_img = function (voucher_id, customer_img) {
+            var defer = $q.defer();
+            send_image.send(voucher_id, customer_img, 'gr_' + voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image').then(defer.resolve, defer.reject);
+            return defer.promise();
+        };
 
+        me.functions.write_file_function = function (path, file_name) {
+            var deferred = $q.defer();
+            $cordovaFile.writeFile(path, file_name + '_customer_image.txt', $scope.temp_data_receipt.customer_image, true)
+                .then(deferred.resolve);
+            return deferred.promise;
+        };
+
+        me.functions.write_file_function_success = function (success) {
+            return me.functions.send_cust_img($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image);
+        };
+
+        me.functions.write_file_function_error = function (error) {
+            if (typeof error == 'object')
+                error = JSON.stringify(error);
+            console.log("1");
+            console.error(error);
+
+            var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, ["Customer Image Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
+
+            t_send_error = {};
+            t_send_error.NAME = "Customer Image Not Stored";
+            t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+            $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+
+            return me.functions.send_cust_img($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image);
+        };
+
+        me.functions.succ_send_img_succ = function (success) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+            $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
+            return $q.when(1);
+        };
+
+        me.functions.succ_send_img_error = function (error) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
+
+            t_send_error = {};
+            t_send_error.NAME = "Error in sending Customer image";
+            t_send_error.DESCRIPTION = me.file_info.file_name + '_customer_image.txt ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+
+            return $q.when(1);
+        };
+
+        me.functions.fail_send_img_success = function (success) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+            $cordovaSQLite.execute(db, query, ['NO FILE CREATED Customer Image ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
+            return $q.when(1);
+        };
+
+        me.functions.fail_send_img_fail = function (error) {
+            t_send_error = {};
+            t_send_error.NAME = "Error in sending Customer image";
+            t_send_error.DESCRIPTION = me.file_info.file_name + '_customer_image.txt ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+            return $q.when(1);
+        };
+
+
+        // Customer Image Promises
+        me.promises.write_cust_file = me.functions.write_file_function(me.file_info.path, me.file_info.file_name);
+
+        me.promises.succ_send_img = me.promises.write_cust_file.then(me.functions.write_file_function_success);
+
+        me.promises.fail_send_img = me.promises.write_cust_file.catch(me.functions.write_file_function_error);
+
+        me.promises.cust_img_final = me.promises.succ_send_img.then(me.functions.succ_send_img_succ);
+
+        me.promises.cust_img_final = me.promises.succ_send_img.catch(me.functions.succ_send_img_error);
+
+        me.promises.cust_img_final = me.promises.fail_send_img.then(me.functions.fail_send_img_success);
+
+        me.promises.cust_img_final = me.promises.fail_send_img.catch(me.functions.fail_send_img_fail);
+
+
+
+
+        //
+        //        $cordovaFile.writeFile(path, file_name + '_customer_image.txt', $scope.temp_data_receipt.customer_image, true)
+        //            .then(function (success) {
+        //
+        //                send_image.send($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image, 'gr_' + $scope.temp_data_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
+        //                    .success(function (data) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+        //                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
+        //                    })
+        //                    .error(function (error) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+        //                        $cordovaSQLite.execute(db, query, [file_name + '_customer_image.txt', $scope.temp_data_receipt.voucher_id]);
+        //                        t_send_error = {};
+        //                        t_send_error.NAME = "Error in sending Customer image";
+        //                        t_send_error.DESCRIPTION = file_name + '_customer_image.txt ' + JSON.stringify(error);
+        //                        send_error_data.send_data(t_send_error, device);
+        //                    });
+        //
+        //            }, function (error) {
+        //                send_image.send($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.customer_image, 'gr_' + $scope.temp_data_receipt.voucher_id + '_customer_image.jpg', 'Goods Receipt', 'customer_image')
+        //                    .success(function (data) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+        //                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Customer Image ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
+        //                    });
+        //                if (typeof error == 'object')
+        //                    error = JSON.stringify(error);
+        //                console.log("1");
+        //                console.error(error);
+        //                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+        //                $cordovaSQLite.execute(db, query, ["Customer Image Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
+        //                t_send_error = {};
+        //                t_send_error.NAME = "Customer Image Not Stored";
+        //                t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
+        //                send_error_data.send_data(t_send_error, device);
+        //                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+        //            });
+
+
+
+
+
+
+        // Signature Functions
+        me.functions.send_sig = function (voucher_id, signature) {
+            var defer = $q.defer();
+            send_image.send(voucher_id, signature, 'gr_' + voucher_id + '_signature.jpg', 'Goods Receipt', 'signature').then(defer.resolve, defer.reject);
+            return defer.promise;
+        };
+
+        me.functions.write_sig_file_function = function (path, file_name) {
+            var deferred = $q.defer();
+            $cordovaFile.writeFile(path, file_name + '_signature.txt', $scope.temp_data_receipt.signature, true)
+                .then(deferred.resolve);
+            return deferred.promise;
+        };
+
+        me.functions.write_sig_file_function_success = function (success) {
+            return me.functions.send_sig($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.signature);
+        };
+
+        me.functions.write_sig_file_function_error = function (error) {
+            if (typeof error == 'object')
+                error = JSON.stringify(error);
+            console.log("1");
+            console.error(error);
+
+            var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, ["Signature Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
+
+            t_send_error = {};
+            t_send_error.NAME = "Signature Not Stored";
+            t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+            $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+
+            return me.functions.send_sig($scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.signature);
+        };
+
+        me.functions.succ_send_sig_succ = function (success) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+            $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
+            return $q.when(1);
+        };
+
+        me.functions.succ_send_sig_error = function (error) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+            $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
+
+            t_send_error = {};
+            t_send_error.NAME = "Error in sending Signature";
+            t_send_error.DESCRIPTION = me.file_info.file_name + '_signature.txt ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+
+            return $q.when(1);
+        };
+
+        me.functions.fail_send_sig_success = function (success) {
+            var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+            $cordovaSQLite.execute(db, query, ['NO FILE CREATED Signature ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
+            return $q.when(1);
+        };
+
+        me.functions.fail_send_sig_fail = function (error) {
+            t_send_error = {};
+            t_send_error.NAME = "Error in sending Signature";
+            t_send_error.DESCRIPTION = me.file_info.file_name + '_signature.txt ' + JSON.stringify(error);
+            send_error_data.send_data(t_send_error, device);
+            return $q.when(1);
+        };
+
+
+        // Signature Promises
+        me.promises.write_sig_file = me.functions.write_sig_file_function(me.file_info.path, me.file_info.file_name);
+
+        me.promises.succ_send_sig = me.promises.write_sig_file.then(me.functions.write_sig_file_function_success);
+
+        me.promises.fail_send_sig = me.promises.write_sig_file.catch(me.functions.write_sig_file_function_error);
+
+        me.promises.sig_final = me.promises.succ_send_sig.then(me.functions.succ_send_sig_succ);
+
+        me.promises.sig_final = me.promises.succ_send_sig.catch(me.functions.succ_send_sig_error);
+
+        me.promises.sig_final = me.promises.fail_send_sig.then(me.functions.fail_send_sig_success);
+
+        me.promises.sig_final = me.promises.fail_send_sig.catch(me.functions.fail_send_sig_fail);
+
+
+
+
+
+
+        //        $cordovaFile.writeFile(me.file_info.path, me.file_info.file_name + '_signature.txt', canvas_signature.signature, true)
+        //            .then(function (success) {
+        //                send_image.send($scope.temp_data_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.temp_data_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
+        //                    .success(function (data) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+        //                        $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
+        //                    })
+        //                    .error(function (error) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID) VALUES(?, ?)";
+        //                        $cordovaSQLite.execute(db, query, [me.file_info.file_name + '_signature.txt', $scope.temp_data_receipt.voucher_id]);
+        //                        t_send_error = {};
+        //                        t_send_error.NAME = "Error in sending Signature";
+        //                        t_send_error.DESCRIPTION = me.file_info.file_name + '_signature.txt ' + JSON.stringify(error);
+        //                        send_error_data.send_data(t_send_error, device);
+        //                    });
+        //            }, function (error) {
+        //                send_image.send($scope.temp_data_receipt.voucher_id, canvas_signature.signature, 'gr_' + $scope.temp_data_receipt.voucher_id + '_signature.jpg', 'Goods Receipt', 'signature')
+        //                    .success(function (data) {
+        //                        var query = "INSERT INTO RECEIPT_FILES (FILE_NAME, PARENT_ID, UPLOADED) VALUES(?, ?, 1)";
+        //                        $cordovaSQLite.execute(db, query, ['NO FILE CREATED Signature ' + $scope.temp_data_receipt.voucher_id, $scope.temp_data_receipt.voucher_id]);
+        //                    });
+        //                if (typeof error == 'object')
+        //                    error = JSON.stringify(error);
+        //                console.log("2");
+        //                console.error(error);
+        //                var query = "INSERT INTO ERROR_LOG (NAME, DESCRIPTION) VALUES(?, ?)";
+        //                $cordovaSQLite.execute(db, query, ["Customer Signature Not Stored " + $scope.temp_data_receipt.voucher_id, error]);
+        //                t_send_error = {};
+        //                t_send_error.NAME = "Signarure Not Stored";
+        //                t_send_error.DESCRIPTION = $scope.temp_data_receipt.voucher_id + ' ' + JSON.stringify(error);
+        //                send_error_data.send_data(t_send_error, device);
+        //                $cordovaToast.show("Collect Document Copy From Customer", 'long', 'bottom');
+        //            });
+
+        $cordovaToast.show("Wait..", "long", "bottom");
         $ionicHistory.clearHistory();
-        $state.transitionTo('main.good_receipt.final');
+
+
+        $q.all([me.promises.cust_img_final, me.promises.sig_final]).then(function (values) {
+            $state.transitionTo('main.good_receipt.final');
+        });
     };
 
 
@@ -200,7 +395,6 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         create_new_good_receipt.create_feed(final_data)
             .success(function (data) {
                 $scope.new_good_receipt.voucher_id = data.message.data.name;
-                $scope.new_good_receipt_search.confirm_disable = false;
 
                 $scope.temp_data_receipt.voucher_id = $scope.new_good_receipt.voucher_id;
                 $scope.temp_data_receipt.customer_image = $scope.new_good_receipt.customer_image;
@@ -225,18 +419,46 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
                                 $scope.save_img_to_file();
 
                             });
+                    },
+                    function (error) {
+                        $cordovaFile.createDir(cordova.file.dataDirectory, "proof_img", false).then(
+                            function (success) {
+                                console.log("5");
+                                console.error(success);
+                                $scope.save_img_to_file();
+                            },
+                            function (error) {
+                                console.log("3");
+                                if (typeof error == 'object')
+                                    error = JSON.stringify(error);
+                                console.error(error);
+                                $cordovaSQLite.execute(db, query, ["Can't Create Main Image Storage Dir", error]);
+                                $scope.save_img_to_file();
+                            });
+                        console.log("8");
+                        if (typeof error == 'object')
+                            error = JSON.stringify(error);
+                        console.error(error);
+                        $cordovaSQLite.execute(db, query, ["GR Query Error", error]);
+
+                        t_send_error = {};
+                        t_send_error.NAME = "GR Query Error";
+                        t_send_error.DESCRIPTION = error;
+                        send_error_data.send_data(t_send_error, device);
+
                     });
             })
             .error(function (data) {
                 $scope.new_good_receipt_search.confirm_disable = false;
                 error = '';
-                if ("_server_messages" in data) {
-                    error = JSON.parse(data._server_messages);
-                    error = error[0];
-                } else {
-                    error = "Server Error";
+                if (data != null) {
+                    if ("_server_messages" in data) {
+                        error = JSON.parse(data._server_messages);
+                        error = error[0];
+                    } else {
+                        error = "Server Error";
+                    }
                 }
-
                 if (typeof error == 'object')
                     error = JSON.stringify(error);
                 $cordovaToast.show(error + " Contact to admin", 'long', 'bottom');
@@ -260,12 +482,13 @@ ionic_app.controller('good_receipt_controller', function ($scope, $rootScope, $s
         document.addEventListener("deviceready", function () {
 
             var options = {
-                quality: 50,
+                quality: 30,
                 destinationType: Camera.DestinationType.FILE_URI,
                 sourceType: Camera.PictureSourceType.CAMERA,
                 allowEdit: false,
                 encodingType: Camera.EncodingType.JPEG,
-                cameraDirection: Camera.Direction.FRONT
+                cameraDirection: Camera.Direction.FRONT,
+                correctOrientation: true
             };
 
             me.geo_location();

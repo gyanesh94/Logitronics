@@ -157,7 +157,7 @@ ionic_app.controller('main_controller', function ($scope, $rootScope, $state, $c
         $cordovaFile.readAsText(t_path, t_name).then(function (t_data) {
             send_image.send(t_pid, t_data, 'gr_' + t_pid + t_img_suf, 'Goods Receipt', t_type)
                 .success(function (data) {
-                    var query = "UPDATE RECEIPT_FILES SET UPLOADED = 1 WHERE FILE_NAME = " + t_name;
+                    var query = "UPDATE RECEIPT_FILES SET UPLOADED = 1 WHERE FILE_NAME = '" + t_name + "'";
                     $cordovaSQLite.execute(db, query);
                     $scope.upload_data.upload(count);
                 })
