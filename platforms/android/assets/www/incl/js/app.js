@@ -39,7 +39,7 @@ ionic_app.run(function ($ionicPlatform, $state, $cordovaSQLite) {
         }, function (err) {
             console.error(err);
         });
-        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT, PARENT_ID INTEGER, UPLOADED INTEGER DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
+        var query = "CREATE TABLE IF NOT EXISTS RECEIPT_FILES (FILE_NAME TEXT PRIMARY KEY, PARENT_ID INTEGER, UPLOADED INTEGER DEFAULT 0, FOREIGN KEY (PARENT_ID) REFERENCES RECEIPT_DATA(ID))";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
             console.log("Receipt_Files Table Created");
         }, function (err) {
