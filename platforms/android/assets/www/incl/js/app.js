@@ -211,6 +211,14 @@ ionic_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('main.good_receipt.additional_info', {
+            url: '/additional_info',
+            views: {
+                'good_receipt_content_view': {
+                    templateUrl: 'comp/good_receipt/form/additional_info.html'
+                }
+            }
+        })
         .state('main.good_receipt.acknowledgement', {
             url: '/acknowledgement',
             views: {
@@ -342,7 +350,7 @@ ionic_app.value('app_settings', {
 
 // App Version
 ionic_app.value('app_version', {
-    version: 'v1.0'
+    version: 'v1.0.2'
 });
 
 
@@ -396,7 +404,12 @@ ionic_app.config(function ($translateProvider) {
         ITEM: 'Item',
         TAKE_NEW_IMAGE: 'Take New Image',
         SKIP: 'Skip',
-        DETAILS: 'Details'
+        DETAILS: 'Details',
+        ADDITIONAL_INFO: 'Additional Info',
+        REMARKS: 'Remarks',
+        RESIDUE: 'Residue',
+        SHORT: 'Short',
+        DELIVERY_TYPE: 'Delivery Type'
     });
 
     $translateProvider.translations('hi', {
@@ -439,7 +452,12 @@ ionic_app.config(function ($translateProvider) {
         ITEM: 'आइटम',
         TAKE_NEW_IMAGE: 'नई छवि ले',
         SKIP: 'स्किप',
-        DETAILS: 'विवरण'
+        DETAILS: 'विवरण',
+        ADDITIONAL_INFO: 'अतिरिक्त जानकारी',
+        REMARKS: 'टिप्पणियां',
+        RESIDUE: 'बाक़ी',
+        SHORT: 'कम',
+        DELIVERY_TYPE: 'वितरण के प्रकार'
     });
 
     $translateProvider.preferredLanguage('en');

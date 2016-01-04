@@ -25,7 +25,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $q, $rootScope
         loc_lat: '',
         loc_long: '',
         signature: '',
-        process_id: ''
+        process_id: '',
+        short: '',
+        residue: '',
+        remarks: '',
+        delivery_type: 'Refill'
     };
 
     $scope.new_good_receipt_search_object = {
@@ -98,9 +102,9 @@ ionic_app.controller('good_receipt_controller', function ($scope, $q, $rootScope
         me.file_info = {};
         me.file_info.path = cordova.file.dataDirectory + "/proof_img/";
         me.file_info.file_name = 'gr_' + $scope.temp_data_receipt.voucher_id;
-        
+
         $cordovaToast.show("Wait..", "long", "bottom");
-        
+
         me.functions = {};
         me.promises = {};
 
@@ -340,7 +344,11 @@ ionic_app.controller('good_receipt_controller', function ($scope, $q, $rootScope
             customer_document_id: $scope.new_good_receipt.customer_document_id,
             location_latitude: $scope.new_good_receipt.loc_lat,
             location_longitude: $scope.new_good_receipt.loc_long,
-            process_id: $scope.new_good_receipt.process_id
+            deduplicacy_id: $scope.new_good_receipt.process_id,
+            remarks: $scope.new_good_receipt.remarks,
+            residue: $scope.new_good_receipt.residue,
+            short: $scope.new_good_receipt.short,
+            delivery_type: $scope.new_good_receipt.delivery_type
         };
 
 
@@ -564,15 +572,28 @@ ionic_app.controller('good_receipt_controller', function ($scope, $q, $rootScope
     $scope.item_received_name_skip = function () {
         $scope.new_good_receipt.item_received_name = '';
         $scope.new_good_receipt.item_received_quantity = '';
-        $state.transitionTo('main.good_receipt.acknowledgement');
+        $state.transitionTo('main.good_receipt.additional_info');
     };
 
     $scope.item_received_quantity_next = function () {
         if ($scope.new_good_receipt.item_received_quantity == '' || $scope.new_good_receipt.item_received_quantity == undefined)
             $cordovaToast.show('Enter Received Quantity', 'short', 'center');
         else
-            $state.transitionTo('main.good_receipt.acknowledgement');
+            $state.transitionTo('main.good_receipt.additional_info');
     };
+
+    $scope.additional_info_next = function () {
+        if ($scope.new_good_receipt.item_delievered_name.indexOf("EC") == -1 && $scope.new_good_receipt.item_received_name.indexOf("FC") == -1) {
+            $state.transitionTo('main.good_receipt.acknowledgement');
+        } else {
+            if ($scope.new_good_receipt.remarks.trim() == "") {
+                $cordovaToast.show("Add Remarks", "short", "bottom");
+            } else {
+                $state.transitionTo('main.good_receipt.acknowledgement');
+            }
+        }
+    };
+
 
     $scope.take_signature_button = function () {
         $scope.new_good_receipt_search.take_signature_button_disable = true;
