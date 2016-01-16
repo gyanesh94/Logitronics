@@ -154,7 +154,9 @@ ionic_app.service('get_stock_owner', ['$http', '$q', 'app_settings', function ($
 // Create Payment Receipt
 ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
+        data.client = "app";
         var snd = {
+            client: 'app',
             data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/resource/Payment Receipt/', $.param(snd));
@@ -165,7 +167,9 @@ ionic_app.service('create_new_payment_receipt', ['$http', 'app_settings', functi
 // Create Good Receipt
 ionic_app.service('create_new_good_receipt', ['$http', 'app_settings', function ($http, app_settings) {
     this.create_feed = function (data) {
+        data.client = "app";
         var snd = {
+            client: 'app',
             data: JSON.stringify(data)
         };
         return $http.post(app_settings.server_base_url + '/api/method/flows.flows.controller.app_controller.create_gr', $.param(snd));

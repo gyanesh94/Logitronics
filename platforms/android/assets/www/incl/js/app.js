@@ -350,7 +350,7 @@ ionic_app.value('app_settings', {
 
 // App Version
 ionic_app.value('app_version', {
-    version: 'v1.0.2'
+    version: 'v1.0.3'
 });
 
 
