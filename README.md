@@ -10,6 +10,7 @@ An Android application is developed to keep the track on cylinder deliveries mad
 - All deliveries are synced with company server in real-time
 - Allow employee take signature of recipient when delivery is confirmed
 - Resulted 30% increase in delivery efficiency of company
+- Support 2 languages Hindi and English
 
 ------
 
